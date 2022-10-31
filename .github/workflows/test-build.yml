@@ -68,9 +68,12 @@ jobs:
         cd ~/squashfs-tmp;
         #sudo --preserve-env chroot squashfs-root/ umount -lf squashfs-root/{proc/,dev/,sys/}
         sudo --preserve-env chroot squashfs-root/ umount -lf /proc
-        sudo --preserve-env chroot squashfs-root/ umount -lf /dev
         sudo --preserve-env chroot squashfs-root/ umount -lf /sys
-        sudo umount -lf /{proc,dev,sys}
+        sudo --preserve-env chroot squashfs-root/ umount -lf /dev
+        sudo umount -lf /proc
+        sudo umount -lf /sys
+        sudo umount -lf /dev
+                
       shell: bash
       continue-on-error: true
     
