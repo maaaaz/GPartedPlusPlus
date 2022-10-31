@@ -19,7 +19,7 @@ jobs:
     
     - name: Install prerequisites
       run: |
-        sudo apt -qq update; sudo apt -qq install squashfs-tools isolinux xorriso unzip zip
+        sudo apt -qq -y update; sudo apt -y -qq install squashfs-tools isolinux xorriso unzip zip
         
     - name: Get GParted live zip
       run: |
@@ -40,7 +40,9 @@ jobs:
       run: |
         set -xe
         cd ~/squashfs-tmp; 
-        sudo --preserve-env chroot squashfs-root/ apt update
+        sudo --preserve-env chroot squashfs-root/ echo "nameserver 8.8.8.8" > /etc/resolv.conf
+        sudo --preserve-env chroot squashfs-root/ apt update -y
+        sudo --preserve-env chroot squashfs-root/ apt upgrade -y
         sudo --preserve-env chroot squashfs-root/ apt search firefox
         exit(1)
       
