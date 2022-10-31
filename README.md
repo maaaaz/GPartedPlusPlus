@@ -5,7 +5,7 @@ Description
 -----------
 **GParted++** (*GPartedPlusPlus*) is the **original GParted Live image with several additions**
 
-Features
+Additions
 --------
 * A friendlier `vi`: `vim` + a `.vimrc` file in the `/root` directory. So perform a `sudo -s` from the Debian live `user` first to profit.
 * Common bash aliases in the `/root/.bashrc` file:
@@ -22,17 +22,22 @@ Features
     alias la='ls -A'
     alias l='ls -CF'
     ```
-* Some useful additional packages, mostly [these ones](https://github.com/maaaaz/dotfiles/blob/master/debian_ubuntu.sh), notably these ones:
+* Some useful additional packages (full package list [here](https://github.com/maaaaz/GPartedPlusPlus/blob/main/_resources/gparted-livecd-packages.txt)), mostly [these ones](https://github.com/maaaaz/dotfiles/blob/master/debian_ubuntu.sh), notably these ones:
     * `pv`: to allow printing progress bars and rates during transfers etc.
     * `htop`, `bmon`, `nmon`: for system monitoring
     * `zutils`, `pigz`, `zip`, `unzip`: for processing zlib compressed data
     * `colordiff`, `xxd`, `vbindiff`: for pretty-printing data
     * `cifs-utils`, `smbclient`: for connecting to SMB shares
-    * `nmap`, `socat`, `proxychains`, `wireshark`, `tshark`, `vlan`: for network transfers and debugging
+    * `nmap`, `ncat`, `socat`, `proxychains`, `wireshark`, `tshark`, `vlan`: for network transfers and debugging
     * `xrdp`: an RDP client
     * `usbutils`: to handle USB devices
     * `parallel`: to process parallel tasks
     * `open-vm-tools`: to have a builtin compatibility with VMWare hypervisors
+
+
+Usage
+-----
+* Download the latest iso file [in the `releases` section](https://github.com/maaaaz/GPartedPlusPlus/releases)
 
 Changelog
 ---------
@@ -43,3 +48,12 @@ Copyright and license
 * All trademarks, service marks, trade names and product names appearing on this repository are the property of their respective owners 
 * I don't own anything on GParted brand, neither am I affiliated or working on the project
 * Content provided in this repository is distributed with the same licence used by [`GParted`](https://gparted.org), which is to date, the [GPL licence](https://www.gnu.org/licenses/gpl-3.0.html)
+
+Useful resources
+----------------
+* https://gparted.org/add-packages-in-gparted-live.php
+* https://drbl.org/fine-print.php?path=./faq/2_System/81_add_prog_in_filesystem-squashfs.faq#81_add_prog_in_filesystem-squashfs.faq
+* https://sethc23.github.io/wiki/1_POSTS/2016-03-10-modifying-linux-filesystem-and-live-cd-via-chroot/
+* http://sirlagz.net/2013/06/20/how-to-customise-gparted-livecd/
+* https://live-team.pages.debian.net/live-manual/html/live-manual/customizing-run-time-behaviours.en.html
+* https://live-team.pages.debian.net/live-manual/html/live-manual/customizing-contents.en.html#live-chroot-local-includes
