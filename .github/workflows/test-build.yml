@@ -26,7 +26,8 @@ jobs:
       run: |
         set -xe
         
-        time wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
+        #time wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
+        time wget -nv https://altushost-swe.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
       shell: bash
     
     - name: Prepare custom env
@@ -68,23 +69,27 @@ jobs:
         cd ~/squashfs-tmp;
         #sudo --preserve-env chroot squashfs-root/ umount -lf squashfs-root/{proc/,dev/,sys/}
         
-        sudo --preserve-env chroot squashfs-root/ umount /proc
-        sudo --preserve-env chroot squashfs-root/ umount -lf /proc
+        sudo umount squashfs-root/proc/
+        sudo umount squashfs-root/sys/
+        sudo umount squashfs-root/dev/
         
-        sudo --preserve-env chroot squashfs-root/ umount -lf /sys
-        sudo --preserve-env chroot squashfs-root/ umount -lf /sys
+        #sudo --preserve-env chroot squashfs-root/ umount /proc
+        #sudo --preserve-env chroot squashfs-root/ umount -lf /proc
         
-        sudo --preserve-env chroot squashfs-root/ umount -lf /dev
-        sudo --preserve-env chroot squashfs-root/ umount -lf /dev
+        #sudo --preserve-env chroot squashfs-root/ umount -lf /sys
+        #sudo --preserve-env chroot squashfs-root/ umount -lf /sys
         
-        sudo umount /proc
-        sudo umount -lf /proc
+        #sudo --preserve-env chroot squashfs-root/ umount -lf /dev
+        #sudo --preserve-env chroot squashfs-root/ umount -lf /dev
         
-        sudo umount /sys
-        sudo umount -lf /sys
+        #sudo umount /proc
+        #sudo umount -lf /proc
         
-        sudo umount /dev
-        sudo umount -lf /dev
+        #sudo umount /sys
+        #sudo umount -lf /sys
+        
+        #sudo umount /dev
+        #sudo umount -lf /dev
                 
       shell: bash
       #continue-on-error: true
