@@ -19,7 +19,7 @@ jobs:
     
     - name: Install prerequisites
       run: |
-        sudo apt-get update; sudo apt-get install squashfs-tools isolinux xorriso unzip zip
+        sudo apt-get -q update; sudo apt-get -q install squashfs-tools isolinux xorriso unzip zip
         
     - name: Get GParted live zip
       run: |
@@ -38,7 +38,7 @@ jobs:
     
     - name: Get GParted Live zip and customize it
       run: |
-        sudo chroot squashfs-root/
+        cd ~/squashfs-tmp; sudo chroot squashfs-root/
       
         echo "nameserver 8.8.8.8" > /etc/resolv.conf
         apt-get update; apt-get install firefox-esr
