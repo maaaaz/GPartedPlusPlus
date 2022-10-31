@@ -1,4 +1,4 @@
-name: Python application
+name: GParted Live customization build script
 
 on: [push]
   
@@ -25,7 +25,7 @@ jobs:
       run: |
         wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
     
-    - name: Get GParted live zip
+    - name: Prepare custom env
       run: |
         mkdir ~/zip-tmp ~/squashfs-tmp
         unzip -q gparted-live-1.4.0-5-amd64.zip -d ~/zip-tmp
