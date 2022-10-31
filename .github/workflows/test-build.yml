@@ -19,4 +19,22 @@ jobs:
     
     - name: Create year/month dirs if not existing
       run: |
+        sudo apt-get update; sudo apt-get install squashfs-tools isolinux xorriso unzip zip chroot
         wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
+        mkdir ~/zip-tmp ~/squashfs-tmp
+        unzip gparted-live-1.4.0-5-amd64.zip -d ~/zip-tmp
+        cp ~/zip-tmp/live/filesystem.squashfs ~/squashfs-tmp
+        cd ~/squashfs-tmp; sudo unsquashfs filesystem.squashfs
+        
+        sudo mount --bind /proc squashfs-root/proc/
+        sudo mount --bind /sys squashfs-root/sys/
+        sudo mount --bind /dev squashfs-root/dev/
+        sudo chroot squashfs-root/
+        echo "nameserver 8.8.8.8" > /etc/resolv.conf
+        apt-get update; apt-get install firefox-esr
+        exit
+
+        sudo mksquashfs squashfs-root filesystem.squashfs.new -b 1024k -comp xz -Xbcj x86 -e boot
+        sudo cp filesystem.squashfs.new ~/zip-tmp/live/filesystem.squashfs
+        cd ~/zip-tmp ; sudo zip -r ../gparted-live.new.zip ./*
+        xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > /tmp/gparted-live.iso
