@@ -19,8 +19,9 @@ jobs:
     
     - name: Install prerequisites
       run: |
-        #sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
-        sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
+        set -xe
+        sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
+        #sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
         
     - name: Get GParted Live zip
       run: |
@@ -52,47 +53,25 @@ jobs:
         cd ~/squashfs-tmp;
         echo nameserver 8.8.8.8| sudo tee squashfs-root/etc/resolv.conf
         
-        #sudo "echo 'nameserver 8.8.8.8' > squashfs-root/etc/resolv.conf"
-        #sudo --preserve-env chroot squashfs-root/ "echo 'nameserver 8.8.8.8' > squashfs-root/etc/resolv.conf"
-        #sudo --preserve-env chroot squashfs-root/ "echo 'nameserver 8.8.8.8'"
-        
         sudo --preserve-env chroot squashfs-root/ apt -y -qq update
-        #sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
-        #sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install wget mlocate git kbd vim strace ltrace git net-tools lsof python3-pip dkms make bzip2 curl dnsutils openssh-server openssh-client bmon nmon htop gzip coreutils dos2unix util-linux iptables jq less nmap parallel sed grep sqlite3 ftp tzdata vlan python3-virtualenv virtualenvwrapper libpq-dev libpcap-dev libssl-dev python3 python3-dev xxd colordiff findutils zutils nfs-common ntfs-3g pigz xrdp cifs-utils smbclient openssl pv subversion tar telnet tcpdump tshark traceroute vbindiff usbutils whois xz-utils
+        sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install wget mlocate git kbd vim strace ltrace git net-tools lsof python3-pip dkms make bzip2 curl dnsutils openssh-server openssh-client bmon nmon htop gzip coreutils dos2unix util-linux iptables jq less nmap parallel sed grep sqlite3 ftp tzdata vlan python3-virtualenv virtualenvwrapper libpq-dev libpcap-dev libssl-dev python3 python3-dev xxd colordiff findutils zutils nfs-common ntfs-3g pigz xrdp cifs-utils smbclient openssl pv subversion tar telnet tcpdump tshark traceroute vbindiff usbutils whois xz-utils rclone
+        
+        sudo rm -f squashfs-root/etc/resolv.conf
   
       shell: bash
     
     - name: Unprep the custom env
       run: |
-        set -x
+        set -xe
         
         cd ~/squashfs-tmp;
-        #sudo --preserve-env chroot squashfs-root/ umount -lf squashfs-root/{proc/,dev/,sys/}
         
+        findmnt
         sudo umount squashfs-root/proc/
         sudo umount squashfs-root/sys/
         sudo umount squashfs-root/dev/
-        
-        #sudo --preserve-env chroot squashfs-root/ umount /proc
-        #sudo --preserve-env chroot squashfs-root/ umount -lf /proc
-        
-        #sudo --preserve-env chroot squashfs-root/ umount -lf /sys
-        #sudo --preserve-env chroot squashfs-root/ umount -lf /sys
-        
-        #sudo --preserve-env chroot squashfs-root/ umount -lf /dev
-        #sudo --preserve-env chroot squashfs-root/ umount -lf /dev
-        
-        #sudo umount /proc
-        #sudo umount -lf /proc
-        
-        #sudo umount /sys
-        #sudo umount -lf /sys
-        
-        #sudo umount /dev
-        #sudo umount -lf /dev
                 
       shell: bash
-      #continue-on-error: true
     
     - name: Build custom ISO
       run: |
@@ -104,4 +83,6 @@ jobs:
         
         cd ~/zip-tmp ; sudo zip -r ../gparted-live.new.zip ./*
         xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > /tmp/gparted-live.iso
+        ls -al /tmp/gparted-live.iso
+        
       shell: bash
