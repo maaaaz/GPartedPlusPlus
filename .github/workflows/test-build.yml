@@ -35,8 +35,8 @@ jobs:
         sudo mount --bind /proc squashfs-root/proc/
         sudo mount --bind /sys squashfs-root/sys/
         sudo mount --bind /dev squashfs-root/dev/
-      
-      - name: Get GParted Live zip and customize it
+    
+    - name: Get GParted Live zip and customize it
       run: |
         sudo chroot squashfs-root/
       
@@ -44,8 +44,8 @@ jobs:
         apt-get update; apt-get install firefox-esr
         exit
       shell: bash
-
-      - name: Build custom ISO
+    
+    - name: Build custom ISO
       run: |
         sudo mksquashfs squashfs-root filesystem.squashfs.new -b 1024k -comp xz -Xbcj x86 -e boot
         sudo cp filesystem.squashfs.new ~/zip-tmp/live/filesystem.squashfs
