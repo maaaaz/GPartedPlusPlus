@@ -49,7 +49,7 @@ jobs:
         #sudo --preserve-env chroot squashfs-root/ "echo 'nameserver 8.8.8.8'"
         
         sudo --preserve-env chroot squashfs-root/ apt update -y
-        sudo --preserve-env chroot squashfs-root/ apt upgrade -y
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt upgrade -y
         sudo --preserve-env chroot squashfs-root/ apt search firefox
         exit(1)
       
