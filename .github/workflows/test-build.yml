@@ -48,8 +48,8 @@ jobs:
         #sudo --preserve-env chroot squashfs-root/ "echo 'nameserver 8.8.8.8' > squashfs-root/etc/resolv.conf"
         #sudo --preserve-env chroot squashfs-root/ "echo 'nameserver 8.8.8.8'"
         
-        sudo --preserve-env chroot squashfs-root/ apt update -y
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt upgrade -y
+        sudo --preserve-env chroot squashfs-root/ apt -y -qq update
+        #sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
         sudo --preserve-env chroot squashfs-root/ apt search firefox
         exit(1)
       
