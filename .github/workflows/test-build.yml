@@ -1,0 +1,22 @@
+name: Python application
+
+on: [push]
+  
+  #schedule:
+    # * is a special character in YAML so you have to quote this string
+    #- cron:  '10 00 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Create year/month dirs if not existing
+      run: |
+        wget https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
