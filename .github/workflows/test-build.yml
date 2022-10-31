@@ -19,11 +19,11 @@ jobs:
     
     - name: Install prerequisites
       run: |
-        sudo apt -q update; sudo apt -q install squashfs-tools isolinux xorriso unzip zip
+        sudo apt -qq update; sudo apt -qq install squashfs-tools isolinux xorriso unzip zip
         
     - name: Get GParted live zip
       run: |
-        wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
+        time wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
       shell: bash
     - name: Prepare custom env
       run: |
@@ -38,11 +38,15 @@ jobs:
     
     - name: Get GParted Live zip and customize it
       run: |
-        cd ~/squashfs-tmp; sudo --preserve-env chroot squashfs-root/ apt-get install firefox-esr
+        set -xe
+        cd ~/squashfs-tmp; 
+        sudo --preserve-env chroot squashfs-root/ apt update
+        sudo --preserve-env chroot squashfs-root/ apt search firefox
+        exit(1)
       
         #echo "nameserver 8.8.8.8" > /etc/resolv.conf
         #apt-get update; apt-get install firefox-esr
-        exit
+        #exit
       shell: bash
     
     - name: Build custom ISO
