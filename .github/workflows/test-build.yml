@@ -22,7 +22,7 @@ jobs:
         #sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
         sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
         
-    - name: Get GParted live zip
+    - name: Get GParted Live zip
       run: |
         set -xe
         
@@ -43,7 +43,7 @@ jobs:
         sudo mount --bind /dev squashfs-root/dev/
       shell: bash
     
-    - name: Get GParted Live zip and customize it
+    - name: Customize env
       run: |
         set -xe
         
