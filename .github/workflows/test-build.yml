@@ -19,7 +19,7 @@ jobs:
     
     - name: Create year/month dirs if not existing
       run: |
-        sudo apt-get update; sudo apt-get install squashfs-tools isolinux xorriso unzip zip chroot
+        sudo apt-get update; sudo apt-get install squashfs-tools isolinux xorriso unzip zip
         wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
         mkdir ~/zip-tmp ~/squashfs-tmp
         unzip gparted-live-1.4.0-5-amd64.zip -d ~/zip-tmp
