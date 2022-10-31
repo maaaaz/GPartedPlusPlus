@@ -24,7 +24,7 @@ jobs:
     - name: Get GParted live zip
       run: |
         wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
-    
+        
     - name: Prepare custom env
       run: |
         mkdir ~/zip-tmp ~/squashfs-tmp
