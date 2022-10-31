@@ -19,7 +19,7 @@ jobs:
     
     - name: Install prerequisites
       run: |
-        sudo apt -qq -y update; sudo apt -y -qq install squashfs-tools isolinux xorriso unzip zip tee
+        sudo apt -qq update -y; sudo apt upgrade ; -y sudo apt -qq install -y squashfs-tools isolinux xorriso unzip zip
         
     - name: Get GParted live zip
       run: |
