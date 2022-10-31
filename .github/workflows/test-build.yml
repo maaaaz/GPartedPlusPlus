@@ -38,10 +38,10 @@ jobs:
     
     - name: Get GParted Live zip and customize it
       run: |
-        cd ~/squashfs-tmp; sudo --preserve-env chroot squashfs-root/
+        cd ~/squashfs-tmp; sudo --preserve-env chroot squashfs-root/ apt-get install firefox-esr
       
-        echo "nameserver 8.8.8.8" > /etc/resolv.conf
-        apt-get update; apt-get install firefox-esr
+        #echo "nameserver 8.8.8.8" > /etc/resolv.conf
+        #apt-get update; apt-get install firefox-esr
         exit
       shell: bash
     
