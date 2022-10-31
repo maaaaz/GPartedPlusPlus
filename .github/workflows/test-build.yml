@@ -19,7 +19,8 @@ jobs:
     
     - name: Install prerequisites
       run: |
-        sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
+        #sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
+        sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
         
     - name: Get GParted live zip
       run: |
@@ -41,7 +42,7 @@ jobs:
         set -xe
         ls -al ~/squashfs-tmp;
         cd ~/squashfs-tmp;
-        sudo echo "nameserver 8.8.8.8" > squashfs-root/etc/resolv.conf
+        sudo "echo 'nameserver 8.8.8.8' > squashfs-root/etc/resolv.conf"
         #sudo --preserve-env chroot squashfs-root/ "echo 'nameserver 8.8.8.8' > squashfs-root/etc/resolv.conf"
         #sudo --preserve-env chroot squashfs-root/ "echo 'nameserver 8.8.8.8'"
         sudo --preserve-env chroot squashfs-root/ apt update -y
