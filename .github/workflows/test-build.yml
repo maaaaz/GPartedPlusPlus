@@ -17,23 +17,36 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Create year/month dirs if not existing
+    - name: Install prerequisites
       run: |
         sudo apt-get update; sudo apt-get install squashfs-tools isolinux xorriso unzip zip
+    
+    - name: Get GParted live zip
+      run: |
         wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
+    
+    - name: Get GParted live zip
+      run: |
         mkdir ~/zip-tmp ~/squashfs-tmp
-        unzip gparted-live-1.4.0-5-amd64.zip -d ~/zip-tmp
+        unzip -q gparted-live-1.4.0-5-amd64.zip -d ~/zip-tmp
         cp ~/zip-tmp/live/filesystem.squashfs ~/squashfs-tmp
         cd ~/squashfs-tmp; sudo unsquashfs filesystem.squashfs
         
         sudo mount --bind /proc squashfs-root/proc/
         sudo mount --bind /sys squashfs-root/sys/
         sudo mount --bind /dev squashfs-root/dev/
+      
+      - name: Get GParted Live zip and customize it
+      run: |
         sudo chroot squashfs-root/
+      
         echo "nameserver 8.8.8.8" > /etc/resolv.conf
         apt-get update; apt-get install firefox-esr
         exit
+      shell: bash
 
+      - name: Build custom ISO
+      run: |
         sudo mksquashfs squashfs-root filesystem.squashfs.new -b 1024k -comp xz -Xbcj x86 -e boot
         sudo cp filesystem.squashfs.new ~/zip-tmp/live/filesystem.squashfs
         cd ~/zip-tmp ; sudo zip -r ../gparted-live.new.zip ./*
