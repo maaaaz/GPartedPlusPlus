@@ -58,8 +58,19 @@ jobs:
         sudo --preserve-env chroot squashfs-root/ apt -y autoremove --purge
         sudo --preserve-env chroot squashfs-root/ apt -y -qq clean
         sudo --preserve-env chroot squashfs-root/ apt -y -qq autoclean
-        
+               
         sudo --preserve-env chroot squashfs-root/dpkg --get-selections | sudo tee ~/zip-tmp/live/filesystem.packages
+        
+        sudo --preserve-env chroot squashfs-root/ systemctl stop rpcbind.socket
+        sudo --preserve-env chroot squashfs-root/ systemctl stop rpcbind
+        sudo --preserve-env chroot squashfs-root/ systemctl mask rpcbind.socket
+        sudo --preserve-env chroot squashfs-root/ systemctl mask rpcbind
+        
+        sudo --preserve-env chroot squashfs-root/ systemctl stop xrdp
+        sudo --preserve-env chroot squashfs-root/ systemctl mask xrdp
+        
+        sudo --preserve-env chroot squashfs-root/ systemctl stop systemd-resolved.service
+        sudo --preserve-env chroot squashfs-root/ systemctl mask systemd-resolved.service
         
         sudo rm -f squashfs-root/etc/resolv.conf
   
