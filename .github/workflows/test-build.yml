@@ -63,8 +63,9 @@ jobs:
         sudo --preserve-env chroot squashfs-root/ dpkg --get-selections > ~/zip-tmp/live/filesystem.packages
         
         sudo --preserve-env chroot squashfs-root/ systemctl stop rpcbind.socket
-        sudo --preserve-env chroot squashfs-root/ systemctl stop rpcbind
         sudo --preserve-env chroot squashfs-root/ systemctl mask rpcbind.socket
+        
+        sudo --preserve-env chroot squashfs-root/ systemctl stop rpcbind
         sudo --preserve-env chroot squashfs-root/ systemctl mask rpcbind
         
         sudo --preserve-env chroot squashfs-root/ systemctl stop xrdp
@@ -100,8 +101,8 @@ jobs:
       run: |
         set -xe
         
-        sudo cp -f ~/_resources/Gsplash.png ~/zip-tmp/syslinux/Gsplash.png
-        sudo cp -f ~/_resources/Gsplash.png ~/zip-tmp/boot/grub/Gsplash.png
+        sudo cp -f ~/GPartedPlusPlus/_resources/Gsplash.png ~/zip-tmp/syslinux/Gsplash.png
+        sudo cp -f ~/GPartedPlusPlus/_resources/Gsplash.png ~/zip-tmp/boot/grub/Gsplash.png
                 
         cd ~/squashfs-tmp
         sudo mksquashfs squashfs-root filesystem.squashfs.new -b 1024k -comp xz -Xbcj x86 -e boot
