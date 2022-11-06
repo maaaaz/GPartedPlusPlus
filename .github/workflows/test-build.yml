@@ -35,10 +35,10 @@ jobs:
       run: |
         set -xe
         
-        mkdir "~/zip-tmp" "~/squashfs-tmp"
-        unzip -q gparted-live-1.4.0-5-amd64.zip -d "~/zip-tmp"
-        cp "~/zip-tmp/live/filesystem.squashfs" "~/squashfs-tmp"
-        cd "~/squashfs-tmp"; sudo unsquashfs filesystem.squashfs
+        mkdir ~/zip-tmp ~/squashfs-tmp
+        unzip -q gparted-live-1.4.0-5-amd64.zip -d ~/zip-tmp
+        cp ~/zip-tmp/live/filesystem.squashfs ~/squashfs-tmp
+        cd ~/squashfs-tmp; sudo unsquashfs filesystem.squashfs
         
         sudo mount --bind /proc squashfs-root/proc/
         sudo mount --bind /sys squashfs-root/sys/
@@ -49,9 +49,9 @@ jobs:
       run: |
         set -xe
         
-        ls -al "~/squashfs-tmp";
-        cd "~/squashfs-tmp";
-        echo nameserver 8.8.8.8| sudo tee "squashfs-root/etc/resolv.conf"
+        ls -al ~/squashfs-tmp;
+        cd ~/squashfs-tmp;
+        echo nameserver 8.8.8.8| sudo tee squashfs-root/etc/resolv.conf
         
         sudo --preserve-env chroot squashfs-root/ apt -y -qq update
         sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install wget mlocate git kbd vim strace ltrace git net-tools lsof python3-pip dkms make bzip2 curl dnsutils openssh-server openssh-client bmon nmon htop gzip coreutils dos2unix util-linux iptables jq less nmap parallel sed grep sqlite3 ftp tzdata vlan python3-virtualenv virtualenvwrapper libpq-dev libpcap-dev libssl-dev python3 python3-dev xxd colordiff findutils zutils nfs-common ntfs-3g pigz xrdp cifs-utils smbclient openssl pv subversion tar telnet tcpdump tshark traceroute vbindiff usbutils whois xz-utils rclone
@@ -101,17 +101,17 @@ jobs:
       run: |
         set -xe
         
-        sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" ~/zip-tmp/syslinux/Gsplash.png
-        sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" ~/zip-tmp/boot/grub/Gsplash.png
+        sudo cp -f $GITHUB_WORKSPACE/_resources/Gsplash.png ~/zip-tmp/syslinux/Gsplash.png
+        sudo cp -f $GITHUB_WORKSPACE/_resources/Gsplash.png ~/zip-tmp/boot/grub/Gsplash.png
                 
         cd ~/squashfs-tmp
         sudo mksquashfs squashfs-root filesystem.squashfs.new -b 1024k -comp xz -Xbcj x86 -e boot
         sudo cp filesystem.squashfs.new ~/zip-tmp/live/filesystem.squashfs
         
-        sudo find "~/zip-tmp/" -type f -exec sha256sum {} \; 1>"/tmp/sha256sum.txt"
-        sudo cp -f "/tmp/sha256sum.txt" "~/zip-tmp/sha256sum.txt"
+        sudo find ~/zip-tmp/" -type f -exec sha256sum {} \; 1>/tmp/sha256sum.txt
+        sudo cp -f /tmp/sha256sum.txt ~/zip-tmp/sha256sum.txt
         
-        cd ~/zip-tmp ; sudo zip -r "../gparted-live.new.zip" ./*
+        cd ~/zip-tmp ; sudo zip -r ../gparted-live.new.zip ./*
         xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > "/tmp/gparted-live-1.4.0-5-amd64-maaaaz-edition-$(date '+%Y%m%d').iso"
         ls -al /tmp/gparted*
         
