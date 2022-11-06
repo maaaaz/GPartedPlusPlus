@@ -59,6 +59,8 @@ jobs:
         sudo --preserve-env chroot squashfs-root/ apt -y -qq clean
         sudo --preserve-env chroot squashfs-root/ apt -y -qq autoclean
         
+        sudo --preserve-env chroot squashfs-root/dpkg --get-selections | sudo tee ~/zip-tmp/live/filesystem.packages
+        
         sudo rm -f squashfs-root/etc/resolv.conf
   
       shell: bash
@@ -69,10 +71,16 @@ jobs:
         
         cd ~/squashfs-tmp;
         
+        echo "[+] findmnt before unmount"
         findmnt
+        echo
         sudo umount squashfs-root/proc/
         sudo umount squashfs-root/sys/
         sudo umount squashfs-root/dev/
+        
+        echo "[+] findmnt after unmount"
+        findmnt
+        echo
                 
       shell: bash
     
@@ -80,12 +88,18 @@ jobs:
       run: |
         set -xe
         
+        sudo cp -f ~/GPartedPlusPlus/Gsplash.png ~/zip-tmp/syslinux/Gsplash.png
+        sudo cp -f ~/GPartedPlusPlus/Gsplash.png ~/zip-tmp/boot/grub/Gsplash.png
+                
         cd ~/squashfs-tmp
         sudo mksquashfs squashfs-root filesystem.squashfs.new -b 1024k -comp xz -Xbcj x86 -e boot
         sudo cp filesystem.squashfs.new ~/zip-tmp/live/filesystem.squashfs
         
+        sudo find ~/zip-tmp/ -type f -exec sha256sum {} \; 1>/tmp/sha256sum.txt
+        sudo cp -f /tmp/sha256sum.txt ~/zip-tmp/sha256sum.txt
+        
         cd ~/zip-tmp ; sudo zip -r ../gparted-live.new.zip ./*
-        xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > /tmp/gparted-live.iso
-        ls -al /tmp/gparted-live.iso
+        xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > /tmp/gparted-live-1.4.0-5-amd64-maaaaz-edition-$(date '+%Y%m%d').iso
+        ls -al /tmp/gparted*
         
       shell: bash
