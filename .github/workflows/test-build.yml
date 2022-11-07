@@ -108,7 +108,7 @@ jobs:
         sudo mksquashfs squashfs-root filesystem.squashfs.new -b 1024k -comp xz -Xbcj x86 -e boot
         sudo cp filesystem.squashfs.new ~/zip-tmp/live/filesystem.squashfs
         
-        sudo find ~/zip-tmp/" -type f -exec sha256sum {} \; 1>/tmp/sha256sum.txt
+        sudo find ~/zip-tmp/ -type f -exec sha256sum {} \; 1>/tmp/sha256sum.txt
         sudo cp -f /tmp/sha256sum.txt ~/zip-tmp/sha256sum.txt
         
         cd ~/zip-tmp ; sudo zip -r ../gparted-live.new.zip ./*
