@@ -75,17 +75,15 @@ jobs:
         cp $ZIP_TMP/live/filesystem.squashfs $SQUASHFS_TMP
         #cp ~/zip-tmp/live/filesystem.squashfs ~/squashfs-tmp
         
-        cd $SQUASHFS_TMP; sudo unsquashfs filesystem.squashfs
+        cd $SQUASHFS_TMP && sudo unsquashfs filesystem.squashfs
 
         SQUASHFS_ROOT=$(realpath ./squashfs-root)
-        echo $SQUASHFS_ROOT
-
-        exit 1
+        #echo $SQUASHFS_ROOT
         
-        sudo mount --bind /proc squashfs-root/proc/
-        sudo mount --bind /sys squashfs-root/sys/
-        sudo mount --bind /dev squashfs-root/dev/
-        sudo mount --bind /dev/pts squashfs-root/dev/pts/
+        sudo mount --bind /proc $SQUASHFS_ROOT/proc/
+        sudo mount --bind /sys $SQUASHFS_ROOT/sys/
+        sudo mount --bind /dev $SQUASHFS_ROOT/dev/
+        sudo mount --bind /dev/pts $SQUASHFS_ROOT/dev/pts/
         
       shell: bash
     
@@ -93,11 +91,14 @@ jobs:
       run: |
         set -xe
         
-        ls -al ~/squashfs-tmp;
-        cd ~/squashfs-tmp;
-        echo nameserver 8.8.8.8| sudo tee squashfs-root/etc/resolv.conf
-        
-        sudo --preserve-env chroot squashfs-root/ apt -y -qq update
+        ls -al $SQUASHFS_TMP;
+        cd $SQUASHFS_TMP
+        echo nameserver 8.8.8.8| sudo tee $SQUASHFS_ROOT/etc/resolv.conf
+
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y update
+        #sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -qq update
+
+        exit 1
         
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install wget mlocate git kbd vim strace ltrace git net-tools lsof python3-pip dkms make bzip2 curl dnsutils openssh-server openssh-client bmon nmon htop gzip coreutils dos2unix util-linux iptables jq less nmap parallel sed grep sqlite3 ftp tzdata vlan python3-virtualenv virtualenvwrapper libpq-dev libpcap-dev libssl-dev python3 python3-dev xxd colordiff findutils zutils nfs-common ntfs-3g pigz xrdp cifs-utils smbclient openssl pv subversion tar telnet tcpdump tshark traceroute vbindiff usbutils whois xz-utils rclone
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
