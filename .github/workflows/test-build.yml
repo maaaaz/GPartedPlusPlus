@@ -39,7 +39,7 @@ jobs:
         GPARTED_BASE_NAME=$(basename $GPARTED_BASE_FULL_FNAME .zip)
         
         time wget -nv "$GPARTED_BASE_ZIP_URL"
-        GPARTED_BASE_FPATH=$(realpath $GPARTED_BASE_FPATH)
+        GPARTED_BASE_FPATH=$(realpath $GPARTED_BASE_FULL_FNAME)
         
         echo "GPARTED_BASE_ZIP_URL=$GPARTED_BASE_ZIP_URL" >> $GITHUB_ENV
         echo "GPARTED_BASE_FULL_FNAME=$GPARTED_BASE_FULL_FNAME" >> $GITHUB_ENV
