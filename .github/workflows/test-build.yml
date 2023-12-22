@@ -198,6 +198,7 @@ jobs:
       with:
         body: $ISO_OUT_FNAME
         name: $ISO_OUT_FNAME
+        tag_name: $ISO_OUT_FNAME
         files: |
           $ISO_OUT_PATH
           $ZIP_TMP/live/filesystem.packages
