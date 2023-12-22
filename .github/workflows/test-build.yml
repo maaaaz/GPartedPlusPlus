@@ -33,7 +33,7 @@ jobs:
         cd $ROOT_DIR
         
         GPARTED_BASE_ZIP_URL="https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.5.0-6/gparted-live-1.5.0-6-amd64.zip"
-        GPARTED_BASE_NAME=$(basename $GPARTED_BASE_ZIP_URL) .zip
+        GPARTED_BASE_NAME=$(basename $GPARTED_BASE_ZIP_URL .zip)
         time wget -nv "$GPARTED_BASE_ZIP_URL"
         
         echo "GPARTED_BASE_NAME=$GPARTED_BASE_NAME" >> $GITHUB_ENV
