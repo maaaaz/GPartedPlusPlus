@@ -37,17 +37,27 @@ jobs:
         GPARTED_BASE_ZIP_URL="https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.5.0-6/gparted-live-1.5.0-6-amd64.zip"
         GPARTED_BASE_FULL_FNAME=$(basename $GPARTED_BASE_ZIP_URL)
         GPARTED_BASE_NAME=$(basename $GPARTED_BASE_FULL_FNAME .zip)
+
+        # Preparing checksum verification
+        wget -nv "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT"
+        wget -nv "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT.gpg"
+
+        gpg --keyserver hkps://keys.openpgp.org --recv-key 8E94C9CD163E3FB0
+        gpg --verify CHECKSUMS.TXT.gpg CHECKSUMS.TXT
         
         time wget -nv "$GPARTED_BASE_ZIP_URL"
+        sha256sum -c --ignore-missing CHECKSUMS.TXT
+
         GPARTED_BASE_FPATH=$(realpath $GPARTED_BASE_FULL_FNAME)
+        ls -al $GPARTED_BASE_FPATH
         
         echo "GPARTED_BASE_ZIP_URL=$GPARTED_BASE_ZIP_URL" >> $GITHUB_ENV
         echo "GPARTED_BASE_FULL_FNAME=$GPARTED_BASE_FULL_FNAME" >> $GITHUB_ENV
         echo "GPARTED_BASE_NAME=$GPARTED_BASE_NAME" >> $GITHUB_ENV
         echo "GPARTED_BASE_FPATH=$GPARTED_BASE_FPATH" >> $GITHUB_ENV
 
-        ISO_OUT_FILE_NAME="$GPARTED_BASE_NAME-maaaaz-edition-$(date '+%Y%m%d').iso"
-        echo "ISO_OUT_FILE_NAME=$ISO_OUT_FILE_NAME" >> $GITHUB_ENV
+        ISO_OUT_PATH="$ROOT_DIR/$GPARTED_BASE_NAME-maaaaz-edition-$(date '+%Y%m%d').iso"
+        echo "ISO_OUT_PATH=$ISO_OUT_PATH" >> $GITHUB_ENV
         
         #time wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
         #time wget -nv https://altushost-swe.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
@@ -68,15 +78,9 @@ jobs:
         
         mkdir "$ZIP_TMP" "$SQUASHFS_TMP"
         
-        #ls -al "$ZIP_TMP"
-        #ls -al "SQUASHFS_TMP"
-
-        
         unzip -q $GPARTED_BASE_FPATH -d $ZIP_TMP
-        #unzip -q gparted-live-1.4.0-5-amd64.zip -d ~/zip-tmp
 
         cp $ZIP_TMP/live/filesystem.squashfs $SQUASHFS_TMP
-        #cp ~/zip-tmp/live/filesystem.squashfs ~/squashfs-tmp
         
         cd $SQUASHFS_TMP && sudo unsquashfs filesystem.squashfs
 
@@ -98,12 +102,12 @@ jobs:
         cd $SQUASHFS_TMP
         echo nameserver 8.8.8.8| sudo tee $SQUASHFS_ROOT/etc/resolv.conf
 
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y update
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q update
 
         wget -nv "http://free.nchc.org.tw/debian/pool/main/l/linux/linux-libc-dev_6.5.13-1_amd64.deb" -O "$SQUASHFS_ROOT/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
         #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
         
       shell: bash
@@ -112,17 +116,15 @@ jobs:
       run: |
         set -xe
 
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
-        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
+        wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.pystartup" -O "$SQUASHFS_ROOT/root/.pystartup"
+        wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "$SQUASHFS_ROOT/root/.bashrc"
+        wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "$SQUASHFS_ROOT/root/.vimrc"
         
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y autoremove --purge
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y clean
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y autoclean
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
         
-        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install wget mlocate git kbd vim strace ltrace git net-tools lsof python3-pip dkms make bzip2 curl dnsutils openssh-server openssh-client bmon nmon htop gzip coreutils dos2unix util-linux iptables jq less nmap parallel sed grep sqlite3 ftp tzdata vlan python3-virtualenv virtualenvwrapper libpq-dev libpcap-dev libssl-dev python3 python3-dev xxd colordiff findutils zutils nfs-common ntfs-3g pigz xrdp cifs-utils smbclient openssl pv subversion tar telnet tcpdump tshark traceroute vbindiff usbutils whois xz-utils rclone
-        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq autoremove --purge
-        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq clean
-        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq autoclean
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q autoremove --purge
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q clean
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q autoclean
         
         (sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg --get-selections) > $ZIP_TMP/live/filesystem.packages
         
@@ -180,7 +182,10 @@ jobs:
         sudo cp -f /tmp/sha256sum.txt $ZIP_TMP/sha256sum.txt
         
         cd $ZIP_TMP && sudo zip -r ../gparted-live.new.zip ./*
-        xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > "$ISO_OUT_FILE_NAME"
-        ls -al $ISO_OUT_FILE_NAME
+        xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > "$ISO_OUT_PATH"
+        ls -al $ISO_OUT_PATH
+
+        echo "[+] sha256sum"
+        sha256sum $ISO_OUT_PATH
         
       shell: bash
