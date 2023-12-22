@@ -89,31 +89,37 @@ jobs:
         sudo mount --bind /dev/pts $SQUASHFS_ROOT/dev/pts/
         
       shell: bash
-    
-    - name: Customize env
+
+    - name: Upgrade current builtin GParted packages
       run: |
         set -xe
-        
+
         ls -al $SQUASHFS_TMP
         cd $SQUASHFS_TMP
         echo nameserver 8.8.8.8| sudo tee $SQUASHFS_ROOT/etc/resolv.conf
 
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y update
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y update
         #sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -qq update
-
+        
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat $GITHUB_WORKSPACE/_resources/packages_to_add.txt)
+        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
+        
+      shell: bash
+    
+    - name: Customize env with additional packages
+      run: |
+        set -xe
+        
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y autoremove --purge
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y clean
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y autoclean
         
         #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install wget mlocate git kbd vim strace ltrace git net-tools lsof python3-pip dkms make bzip2 curl dnsutils openssh-server openssh-client bmon nmon htop gzip coreutils dos2unix util-linux iptables jq less nmap parallel sed grep sqlite3 ftp tzdata vlan python3-virtualenv virtualenvwrapper libpq-dev libpcap-dev libssl-dev python3 python3-dev xxd colordiff findutils zutils nfs-common ntfs-3g pigz xrdp cifs-utils smbclient openssl pv subversion tar telnet tcpdump tshark traceroute vbindiff usbutils whois xz-utils rclone
-        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
         #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq autoremove --purge
         #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq clean
         #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq autoclean
-
-               
+        
         sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg --get-selections > ~/zip-tmp/live/filesystem.packages
         
         sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop rpcbind.socket
