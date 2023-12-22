@@ -45,6 +45,9 @@ jobs:
         echo "GPARTED_BASE_FULL_FNAME=$GPARTED_BASE_FULL_FNAME" >> $GITHUB_ENV
         echo "GPARTED_BASE_NAME=$GPARTED_BASE_NAME" >> $GITHUB_ENV
         echo "GPARTED_BASE_FPATH=$GPARTED_BASE_FPATH" >> $GITHUB_ENV
+
+        ISO_OUT_FILE_NAME="$GPARTED_BASE_NAME-maaaaz-edition-$(date '+%Y%m%d').iso"
+        echo "ISO_OUT_FILE_NAME=$ISO_OUT_FILE_NAME" >> $GITHUB_ENV
         
         #time wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
         #time wget -nv https://altushost-swe.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
@@ -79,7 +82,6 @@ jobs:
 
         SQUASHFS_ROOT=$(realpath ./squashfs-root)
         echo "SQUASHFS_ROOT=$SQUASHFS_ROOT" >> $GITHUB_ENV
-        #echo $SQUASHFS_ROOT
         
         sudo mount --bind /proc $SQUASHFS_ROOT/proc/
         sudo mount --bind /sys $SQUASHFS_ROOT/sys/
@@ -92,39 +94,44 @@ jobs:
       run: |
         set -xe
         
-        ls -al $SQUASHFS_TMP;
+        ls -al $SQUASHFS_TMP
         cd $SQUASHFS_TMP
         echo nameserver 8.8.8.8| sudo tee $SQUASHFS_ROOT/etc/resolv.conf
 
         sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y update
         #sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -qq update
 
-        exit 1
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat $GITHUB_WORKSPACE/_resources/packages_to_add.txt)
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y autoremove --purge
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y clean
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y autoclean
         
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install wget mlocate git kbd vim strace ltrace git net-tools lsof python3-pip dkms make bzip2 curl dnsutils openssh-server openssh-client bmon nmon htop gzip coreutils dos2unix util-linux iptables jq less nmap parallel sed grep sqlite3 ftp tzdata vlan python3-virtualenv virtualenvwrapper libpq-dev libpcap-dev libssl-dev python3 python3-dev xxd colordiff findutils zutils nfs-common ntfs-3g pigz xrdp cifs-utils smbclient openssl pv subversion tar telnet tcpdump tshark traceroute vbindiff usbutils whois xz-utils rclone
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq autoremove --purge
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq clean
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq autoclean
-               
-        sudo --preserve-env chroot squashfs-root/ dpkg --get-selections > ~/zip-tmp/live/filesystem.packages
-        
-        sudo --preserve-env chroot squashfs-root/ systemctl stop rpcbind.socket
-        sudo --preserve-env chroot squashfs-root/ systemctl mask rpcbind.socket
-        
-        sudo --preserve-env chroot squashfs-root/ systemctl stop rpcbind
-        sudo --preserve-env chroot squashfs-root/ systemctl mask rpcbind
-        
-        sudo --preserve-env chroot squashfs-root/ systemctl stop xrdp
-        sudo --preserve-env chroot squashfs-root/ systemctl mask xrdp
-        
-        sudo --preserve-env chroot squashfs-root/ systemctl stop systemd-resolved.service
-        sudo --preserve-env chroot squashfs-root/ systemctl mask systemd-resolved.service
+        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install wget mlocate git kbd vim strace ltrace git net-tools lsof python3-pip dkms make bzip2 curl dnsutils openssh-server openssh-client bmon nmon htop gzip coreutils dos2unix util-linux iptables jq less nmap parallel sed grep sqlite3 ftp tzdata vlan python3-virtualenv virtualenvwrapper libpq-dev libpcap-dev libssl-dev python3 python3-dev xxd colordiff findutils zutils nfs-common ntfs-3g pigz xrdp cifs-utils smbclient openssl pv subversion tar telnet tcpdump tshark traceroute vbindiff usbutils whois xz-utils rclone
+        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
+        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq autoremove --purge
+        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq clean
+        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq autoclean
 
-        sudo --preserve-env chroot squashfs-root/ systemctl stop tftpd-hpa.service
-        sudo --preserve-env chroot squashfs-root/ systemctl mask tftpd-hpa.service
+               
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg --get-selections > ~/zip-tmp/live/filesystem.packages
         
-        sudo rm -f squashfs-root/etc/resolv.conf
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop rpcbind.socket
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask rpcbind.socket
+        
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop rpcbind
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask rpcbind
+        
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop xrdp
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask xrdp
+        
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop systemd-resolved.service
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask systemd-resolved.service
+
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop tftpd-hpa.service
+        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask tftpd-hpa.service
+        
+        sudo rm -f $SQUASHFS_ROOT/etc/resolv.conf
   
       shell: bash
     
@@ -132,15 +139,15 @@ jobs:
       run: |
         set -xe
         
-        cd ~/squashfs-tmp;
+        cd $SQUASHFS_TMP
         
         echo "[+] findmnt before unmount"
         findmnt
         echo
-        sudo umount squashfs-root/proc/
-        sudo umount squashfs-root/sys/
-        sudo umount squashfs-root/dev/pts/
-        sudo umount squashfs-root/dev/
+        sudo umount $SQUASHFS_ROOT/proc/
+        sudo umount $SQUASHFS_ROOT/sys/
+        sudo umount $SQUASHFS_ROOT/dev/pts/
+        sudo umount $SQUASHFS_ROOT/dev/
         
         echo "[+] findmnt after unmount"
         findmnt
@@ -152,18 +159,18 @@ jobs:
       run: |
         set -xe
         
-        sudo cp -f $GITHUB_WORKSPACE/_resources/Gsplash.png ~/zip-tmp/syslinux/Gsplash.png
-        sudo cp -f $GITHUB_WORKSPACE/_resources/Gsplash.png ~/zip-tmp/boot/grub/Gsplash.png
+        sudo cp -f $GITHUB_WORKSPACE/_resources/Gsplash.png $ZIP_TMP/syslinux/Gsplash.png
+        sudo cp -f $GITHUB_WORKSPACE/_resources/Gsplash.png $ZIP_TMP/boot/grub/Gsplash.png
                 
-        cd ~/squashfs-tmp
-        sudo mksquashfs squashfs-root filesystem.squashfs.new -b 1024k -comp xz -Xbcj x86 -e boot
-        sudo cp filesystem.squashfs.new ~/zip-tmp/live/filesystem.squashfs
+        cd $SQUASHFS_TMP
+        sudo mksquashfs $SQUASHFS_ROOT filesystem.squashfs.new -b 1024k -comp xz -Xbcj x86 -e boot
+        sudo cp filesystem.squashfs.new $ZIP_TMP/live/filesystem.squashfs
         
-        sudo find ~/zip-tmp/ -type f -exec sha256sum {} \; 1>/tmp/sha256sum.txt
-        sudo cp -f /tmp/sha256sum.txt ~/zip-tmp/sha256sum.txt
+        sudo find $ZIP_TMP -type f -exec sha256sum {} \; 1>/tmp/sha256sum.txt
+        sudo cp -f /tmp/sha256sum.txt $ZIP_TMP/sha256sum.txt
         
-        cd ~/zip-tmp ; sudo zip -r ../gparted-live.new.zip ./*
-        xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > "/tmp/gparted-live-1.4.0-5-amd64-maaaaz-edition-$(date '+%Y%m%d').iso"
-        ls -al /tmp/gparted*
+        cd $ZIP_TMP && sudo zip -r ../gparted-live.new.zip ./*
+        xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > "$ISO_OUT_FILE_NAME"
+        ls -al $ISO_OUT_FILE_NAME
         
       shell: bash
