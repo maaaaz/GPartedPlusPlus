@@ -33,6 +33,8 @@ Additions
     * `usbutils`: to handle USB devices
     * `parallel`: to process parallel tasks
     * `open-vm-tools`: to have a builtin compatibility with VMWare hypervisors
+    * `libbde-utils`, `dislocker`: to process BitLocked volumes
+    * `ioping`, `nvme-cli`, `fio`: to troubleshoot disks
 
 
 Usage
@@ -41,6 +43,7 @@ Usage
 
 Changelog
 ---------
+* 2023-12-22: `gparted-live-1.5.0-6-amd64-maaaaz-edition-20231222.iso`
 * 2022-10-31: `gparted-live-1.4.0-5-amd64-maaaaz-edition.iso`
 
 Copyright and license
