@@ -41,7 +41,7 @@ jobs:
         #time wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
         #time wget -nv https://altushost-swe.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
 
-        exit(1)
+        exit 1
 
       shell: bash
     
