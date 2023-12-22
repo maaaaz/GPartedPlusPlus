@@ -20,6 +20,7 @@ jobs:
     - name: Install prerequisites
       run: |
         set -xe
+        
         #sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
         sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
         
@@ -41,15 +42,25 @@ jobs:
         #time wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
         #time wget -nv https://altushost-swe.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
 
-        exit 1
-
       shell: bash
     
     - name: Prepare custom env
       run: |
         set -xe
+
+        ZIP_TMP="$ROOT_DIR/zip-tmp/"
+        echo "ZIP_TMP=$ZIP_TMP" >> $GITHUB_ENV
         
-        mkdir ~/zip-tmp ~/squashfs-tmp
+        SQUASHFS_TMP="$ROOT_DIR/squashfs-tmp/"
+        echo "SQUASHFS_TMP=$SQUASHFS_TMP" >> $GITHUB_ENV
+        
+        mkdir "$ZIP_TMP" "SQUASHFS_TMP"
+        
+        ls -al "$ZIP_TMP"
+        ls -al "SQUASHFS_TMP"
+
+        exit 1
+        
         unzip -q gparted-live-1.4.0-5-amd64.zip -d ~/zip-tmp
         cp ~/zip-tmp/live/filesystem.squashfs ~/squashfs-tmp
         cd ~/squashfs-tmp; sudo unsquashfs filesystem.squashfs
