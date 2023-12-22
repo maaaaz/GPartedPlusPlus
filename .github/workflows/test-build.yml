@@ -128,8 +128,10 @@ jobs:
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q autoremove --purge
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q clean
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q autoclean
-        
-        (sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg --get-selections) > $ZIP_TMP/live/filesystem.packages
+
+        FS_PKGS="$ZIP_TMP/live/filesystem.packages"
+        echo "FS_PKGS=$FS_PKGS" >> $GITHUB_ENV
+        (sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg --get-selections) > $FS_PKGS
         
         sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop rpcbind.socket
         sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask rpcbind.socket
@@ -196,9 +198,9 @@ jobs:
     - name: Create a new release
       uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 #v0.1.15
       with:
-        body: $ISO_OUT_FNAME
-        name: $ISO_OUT_FNAME
-        tag_name: $ISO_OUT_FNAME
+        body: ${{ env.ISO_OUT_FNAME }}
+        name: ${{ env.ISO_OUT_FNAME }}
+        tag_name: ${{ env.ISO_OUT_FNAME }}
         files: |
-          $ISO_OUT_PATH
-          $ZIP_TMP/live/filesystem.packages
+          ${{ env.ISO_OUT_PATH }}
+          ${{ env.FS_PKGS }}
