@@ -32,12 +32,19 @@ jobs:
         echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
         
         cd $ROOT_DIR
+        ls -al $ROOT_DIR
         
         GPARTED_BASE_ZIP_URL="https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.5.0-6/gparted-live-1.5.0-6-amd64.zip"
-        GPARTED_BASE_NAME=$(basename $GPARTED_BASE_ZIP_URL .zip)
-        time wget -nv "$GPARTED_BASE_ZIP_URL"
+        GPARTED_BASE_FULL_FNAME=$(basename $GPARTED_BASE_ZIP_URL)
+        GPARTED_BASE_NAME=$(basename $GPARTED_BASE_FULL_FNAME .zip)
         
+        time wget -nv "$GPARTED_BASE_ZIP_URL"
+        GPARTED_BASE_FPATH=$(realpath $GPARTED_BASE_FPATH)
+        
+        echo "GPARTED_BASE_ZIP_URL=$GPARTED_BASE_ZIP_URL" >> $GITHUB_ENV
+        echo "GPARTED_BASE_FULL_FNAME=$GPARTED_BASE_FULL_FNAME" >> $GITHUB_ENV
         echo "GPARTED_BASE_NAME=$GPARTED_BASE_NAME" >> $GITHUB_ENV
+        echo "GPARTED_BASE_FPATH=$GPARTED_BASE_FPATH" >> $GITHUB_ENV
         
         #time wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
         #time wget -nv https://altushost-swe.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
@@ -48,22 +55,32 @@ jobs:
       run: |
         set -xe
 
-        ZIP_TMP="$ROOT_DIR/zip-tmp/"
+        cd $ROOT_DIR
+        
+        ZIP_TMP="$ROOT_DIR/zip-tmp"
         echo "ZIP_TMP=$ZIP_TMP" >> $GITHUB_ENV
         
-        SQUASHFS_TMP="$ROOT_DIR/squashfs-tmp/"
+        SQUASHFS_TMP="$ROOT_DIR/squashfs-tmp"
         echo "SQUASHFS_TMP=$SQUASHFS_TMP" >> $GITHUB_ENV
         
-        mkdir "$ZIP_TMP" "SQUASHFS_TMP"
+        mkdir "$ZIP_TMP" "$SQUASHFS_TMP"
         
-        ls -al "$ZIP_TMP"
-        ls -al "SQUASHFS_TMP"
+        #ls -al "$ZIP_TMP"
+        #ls -al "SQUASHFS_TMP"
+
+        
+        unzip -q $GPARTED_BASE_FPATH -d $ZIP_TMP
+        #unzip -q gparted-live-1.4.0-5-amd64.zip -d ~/zip-tmp
+
+        cp $ZIP_TMP/live/filesystem.squashfs $SQUASHFS_TMP
+        #cp ~/zip-tmp/live/filesystem.squashfs ~/squashfs-tmp
+        
+        cd $SQUASHFS_TMP; sudo unsquashfs filesystem.squashfs
+
+        SQUASHFS_ROOT=$(realpath ./squashfs-root)
+        echo $SQUASHFS_ROOT
 
         exit 1
-        
-        unzip -q gparted-live-1.4.0-5-amd64.zip -d ~/zip-tmp
-        cp ~/zip-tmp/live/filesystem.squashfs ~/squashfs-tmp
-        cd ~/squashfs-tmp; sudo unsquashfs filesystem.squashfs
         
         sudo mount --bind /proc squashfs-root/proc/
         sudo mount --bind /sys squashfs-root/sys/
