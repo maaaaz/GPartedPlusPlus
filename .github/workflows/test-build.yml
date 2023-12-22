@@ -43,6 +43,8 @@ jobs:
         sudo mount --bind /proc squashfs-root/proc/
         sudo mount --bind /sys squashfs-root/sys/
         sudo mount --bind /dev squashfs-root/dev/
+        sudo mount --bind /dev/pts squashfs-root/dev/pts/
+        
       shell: bash
     
     - name: Customize env
