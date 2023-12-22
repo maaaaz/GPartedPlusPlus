@@ -76,6 +76,9 @@ jobs:
         
         sudo --preserve-env chroot squashfs-root/ systemctl stop systemd-resolved.service
         sudo --preserve-env chroot squashfs-root/ systemctl mask systemd-resolved.service
+
+        sudo --preserve-env chroot squashfs-root/ systemctl stop tftpd-hpa.service
+        sudo --preserve-env chroot squashfs-root/ systemctl mask tftpd-hpa.service
         
         sudo rm -f squashfs-root/etc/resolv.conf
   
