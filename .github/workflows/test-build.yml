@@ -101,6 +101,8 @@ jobs:
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y update
         #sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -qq update
 
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y install linux-libc-dev
+        
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y --reinstall install libc6
         
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
