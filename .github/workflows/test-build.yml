@@ -27,8 +27,22 @@ jobs:
       run: |
         set -xe
         
+        ROOT_DIR="/tmp/"
+        echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
+        
+        cd $ROOT_DIR
+        
+        GPARTED_BASE_ZIP_URL="https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.5.0-6/gparted-live-1.5.0-6-amd64.zip"
+        GPARTED_BASE_NAME=$(basename $GPARTED_BASE_ZIP_URL) .zip
+        time wget -nv "$GPARTED_BASE_ZIP_URL"
+        
+        echo "GPARTED_BASE_NAME=$GPARTED_BASE_NAME" >> $GITHUB_ENV
+        
         #time wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
-        time wget -nv https://altushost-swe.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
+        #time wget -nv https://altushost-swe.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
+
+        exit(1)
+
       shell: bash
     
     - name: Prepare custom env
