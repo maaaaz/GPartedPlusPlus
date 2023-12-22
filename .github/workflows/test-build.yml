@@ -28,7 +28,7 @@ jobs:
       run: |
         set -xe
         
-        ROOT_DIR="/tmp/"
+        ROOT_DIR="/tmp"
         echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
         
         cd $ROOT_DIR
