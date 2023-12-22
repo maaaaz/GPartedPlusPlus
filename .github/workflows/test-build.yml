@@ -1,6 +1,6 @@
 name: GParted Live customization build script
 
-on: 
+on: workflow_dispatch
   
   #schedule:
     # * is a special character in YAML so you have to quote this string
