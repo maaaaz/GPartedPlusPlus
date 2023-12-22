@@ -89,7 +89,6 @@ remmina
 ripgrep
 rzip
 samdump2
-screentester
 sd
 secure-delete
 sed
