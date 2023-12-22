@@ -92,6 +92,7 @@ jobs:
         echo
         sudo umount squashfs-root/proc/
         sudo umount squashfs-root/sys/
+        sudo umount squashfs-root/dev/pts/
         sudo umount squashfs-root/dev/
         
         echo "[+] findmnt after unmount"
