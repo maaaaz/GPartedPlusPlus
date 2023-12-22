@@ -78,6 +78,7 @@ jobs:
         cd $SQUASHFS_TMP && sudo unsquashfs filesystem.squashfs
 
         SQUASHFS_ROOT=$(realpath ./squashfs-root)
+        echo "SQUASHFS_ROOT=$SQUASHFS_ROOT" >> $GITHUB_ENV
         #echo $SQUASHFS_ROOT
         
         sudo mount --bind /proc $SQUASHFS_ROOT/proc/
