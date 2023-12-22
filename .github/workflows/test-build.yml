@@ -101,6 +101,8 @@ jobs:
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y update
         #sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -qq update
 
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt search linux-libc-dev
+        
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt install linux-libc-dev
         
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y install libc6-dev
