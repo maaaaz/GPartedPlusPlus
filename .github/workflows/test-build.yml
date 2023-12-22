@@ -101,8 +101,8 @@ jobs:
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y update
         #sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -qq update
 
-        wget -nv "http://free.nchc.org.tw/debian/pool/main/l/linux/linux-libc-dev_6.5.13-1_amd64.deb"
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg -i ./linux-libc-dev_6.5.13-1_amd64.deb
+        wget -nv "http://free.nchc.org.tw/debian/pool/main/l/linux/linux-libc-dev_6.5.13-1_amd64.deb" -O "$SQUASHFS_ROOT/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
         
