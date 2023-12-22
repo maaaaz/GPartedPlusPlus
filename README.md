@@ -22,7 +22,7 @@ Additions
     alias la='ls -A'
     alias l='ls -CF'
     ```
-* Some useful additional packages (full package list [here](https://github.com/maaaaz/GPartedPlusPlus/blob/main/_resources/gparted-livecd-packages.txt)), mostly [these ones](https://github.com/maaaaz/dotfiles/blob/master/debian_ubuntu.sh), notably these ones:
+* Some useful additional packages (additional packages installed list [here](https://github.com/maaaaz/GPartedPlusPlus/blob/main/_resources/packages_to_add.txt), full package list in the `filesystem.packages` of each [Release](https://github.com/maaaaz/GPartedPlusPlus/releases)), mostly based on  [these ones](https://github.com/maaaaz/dotfiles/blob/master/debian_ubuntu.sh), notably these ones:
     * `pv`: to allow printing progress bars and rates during transfers etc.
     * `htop`, `bmon`, `nmon`: for system monitoring
     * `zutils`, `pigz`, `zip`, `unzip`: for processing zlib compressed data
