@@ -20,8 +20,8 @@ jobs:
     - name: Install prerequisites
       run: |
         set -xe
-        sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
-        #sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
+        #sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
+        sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
         
     - name: Get GParted Live zip
       run: |
