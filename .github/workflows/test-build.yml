@@ -116,9 +116,9 @@ jobs:
       run: |
         set -xe
 
-        wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.pystartup" -O "$SQUASHFS_ROOT/root/.pystartup"
-        wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "$SQUASHFS_ROOT/root/.bashrc"
-        wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "$SQUASHFS_ROOT/root/.vimrc"
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.pystartup" -O "/root/.pystartup"
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "/root/.bashrc"
+        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "/root/.vimrc"
         
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
         
