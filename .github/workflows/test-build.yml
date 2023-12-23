@@ -192,7 +192,7 @@ jobs:
         ls -al $ISO_OUT_PATH
 
         echo "[+] sha256sum"
-        cd §ROOT_DIR
+        cd $ROOT_DIR
         SHA256SUM="$ROOT_DIR/sha256sum_iso.txt"
         echo "SHA256SUM=$SHA256SUM" >> $GITHUB_ENV
         sha256sum --tag $ISO_OUT_FNAME > $SHA256SUM
