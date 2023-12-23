@@ -129,7 +129,8 @@ jobs:
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q clean
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q autoclean
 
-        FS_PKGS="$ZIP_TMP/live/filesystem.packages"
+        
+        FS_PKGS="$ZIP_TMP/live/filesystem.packages.txt"
         echo "FS_PKGS=$FS_PKGS" >> $GITHUB_ENV
         (sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg --get-selections) > $FS_PKGS
         
@@ -191,14 +192,16 @@ jobs:
         ls -al $ISO_OUT_PATH
 
         echo "[+] sha256sum"
-        sha256sum $ISO_OUT_PATH
+        SHA256SUM="$ROOT_DIR/sha256sum_iso.txt"
+        echo "SHA256SUM=$SHA256SUM" >> $GITHUB_ENV
+        sha256sum $ISO_OUT_PATH > $SHA256SUM
         
       shell: bash
 
     - name: Create a new release
       uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 #v0.1.15
       with:
-        body: ${{ env.ISO_OUT_FNAME }}
+        body_path: ${{ env.SHA256SUM }}
         name: ${{ env.ISO_OUT_FNAME }}
         tag_name: ${{ env.ISO_OUT_FNAME }}
         files: |
