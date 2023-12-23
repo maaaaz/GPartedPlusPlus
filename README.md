@@ -7,7 +7,9 @@ Description
 
 Additions
 --------
-* A friendlier `vi`: `vim` + a `.vimrc` file in the `/root` directory. So perform a `sudo -s` from the Debian live `user` first to profit.
+* A friendlier `vi`: `vim` + a `.vimrc` file in the `/root` directory.  
+  So perform a `sudo -s` from the Debian live `user` first to profit of this comfort.
+  
 * Common bash aliases in the `/root/.bashrc` file:
     ```
     alias ls='ls --color=auto'
