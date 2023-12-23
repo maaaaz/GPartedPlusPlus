@@ -105,6 +105,7 @@ stress
 stress-ng
 stunnel
 subversion
+sysbench
 sysfsutils
 tar
 tcpdump
