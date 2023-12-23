@@ -1,3 +1,4 @@
+archivemount
 autopsy
 bat
 bmon
@@ -6,17 +7,22 @@ cifs-utils
 colordiff
 coreutils
 curl
+dc3dd
+dcfldd
 di
 dislocker
 dkms
 dmidecode
 dnsutils
 dos2unix
+dstat
 fd-find
+fdupes
 ffmpeg
 filezilla
 findutils
 fio
+foremost
 freefilesync
 ftp
 geany
@@ -35,6 +41,7 @@ imagemagick
 inotify-tools
 ioping
 iotop
+iozone3
 iperf3
 iptables
 iputils-*
@@ -44,6 +51,7 @@ kbd
 less
 lftp
 libbde-utils
+libfvde-utils
 libpcap-dev
 libpq-dev
 libssl-dev
@@ -54,13 +62,13 @@ memtester
 mobile-broadband-provider-info
 mtools
 mtr
-nvme-cli
-plocate
+ncdu
 net-tools
 nfs-common
 nmap
 nmon
 ntfs-3g
+nvme-cli
 openssh-client
 openssh-server
 openssl
@@ -68,6 +76,7 @@ openvpn
 parallel
 picocom
 pigz
+plocate
 powertop
 proxychains
 proxychains4
@@ -115,6 +124,7 @@ telnet
 tftp-hpa
 tftpd-hpa
 tio
+tmfs
 tmux
 traceroute
 tshark
