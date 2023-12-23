@@ -195,7 +195,7 @@ jobs:
         cd $ROOT_DIR
         SHA256SUM="$ROOT_DIR/sha256sum_iso.txt"
         echo "SHA256SUM=$SHA256SUM" >> $GITHUB_ENV
-        sha256sum --tag $ISO_OUT_FNAME > $SHA256SUM
+        sha256sum --tag $ISO_OUT_FNAME | tee $SHA256SUM
         
       shell: bash
 
