@@ -187,8 +187,8 @@ jobs:
         sudo find $ZIP_TMP -type f -exec sha256sum {} \; 1>/tmp/sha256sum.txt
         sudo cp -f /tmp/sha256sum.txt $ZIP_TMP/sha256sum.txt
         
-        cd $ZIP_TMP && sudo zip -r ../gparted-live.new.zip ./*
-        xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > "$ISO_OUT_PATH"
+        #cd $ZIP_TMP && sudo zip -r ../gparted-live.new.zip ./*
+        cd $ZIP_TMP && xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > "$ISO_OUT_PATH"
         ls -al $ISO_OUT_PATH
 
         echo "[+] sha256sum"
