@@ -12,7 +12,7 @@ Additions
   
 * Common bash aliases in the `/root/.bashrc` file
   
-* Some useful additional packages (additional packages installed list [here](https://github.com/maaaaz/GPartedPlusPlus/blob/main/_resources/packages_to_add.txt), full package list in the `filesystem.packages.txt` of each [Release](https://github.com/maaaaz/GPartedPlusPlus/releases)), mostly based on  [these ones](https://github.com/maaaaz/dotfiles/blob/master/debian_ubuntu.sh), notably these ones:
+* Some useful additional packages (additional packages installed list [here](https://github.com/maaaaz/GPartedPlusPlus/blob/main/_resources/packages_to_add.txt), full package list in the `filesystem.packages.txt` of each [Release](https://github.com/maaaaz/GPartedPlusPlus/releases)), mostly based on  [these ones](https://github.com/maaaaz/dotfiles/blob/master/debian_ubuntu.sh), and also inspired by [kaisenlinux](https://kaisenlinux.org/):
     * `pv`: to allow printing progress bars and rates during transfers etc.
     * `htop`, `bmon`, `nmon`: for system monitoring
     * `zutils`, `pigz`, `zip`, `unzip`: for processing zlib compressed data
