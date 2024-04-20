@@ -108,10 +108,10 @@ jobs:
         DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q update
 
         wget -nv "http://free.nchc.org.tw/debian/pool/main/l/linux/linux-libc-dev_6.5.13-1_amd64.deb" -O "$SQUASHFS_ROOT/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
+        DEBIAN_FRONTEND=noninteractive sudo  chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
-        #DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
+        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
+        #DEBIAN_FRONTEND=noninteractive sudo chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
         
       shell: bash
     
@@ -119,35 +119,35 @@ jobs:
       run: |
         set -xe
 
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.pystartup" -O "/root/.pystartup"
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "/root/.bashrc"
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.vimrc" -O "/root/.vimrc"
+        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.pystartup" -O "/root/.pystartup"
+        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "/root/.bashrc"
+        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.vimrc" -O "/root/.vimrc"
         
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
+        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
         
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q autoremove --purge
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q clean
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q autoclean
+        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoremove --purge
+        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q clean
+        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoclean
 
         
         FS_PKGS="$ZIP_TMP/live/filesystem.packages.txt"
         echo "FS_PKGS=$FS_PKGS" >> $GITHUB_ENV
-        (sudo --preserve-env chroot $SQUASHFS_ROOT/ dpkg --get-selections) > $FS_PKGS
+        (sudo chroot $SQUASHFS_ROOT/ dpkg --get-selections) > $FS_PKGS
         
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop rpcbind.socket
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask rpcbind.socket
+        sudo chroot $SQUASHFS_ROOT/ systemctl stop rpcbind.socket
+        sudo chroot $SQUASHFS_ROOT/ systemctl mask rpcbind.socket
         
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop rpcbind
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask rpcbind
+        sudo chroot $SQUASHFS_ROOT/ systemctl stop rpcbind
+        sudo  chroot $SQUASHFS_ROOT/ systemctl mask rpcbind
         
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop xrdp
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask xrdp
+        sudo chroot $SQUASHFS_ROOT/ systemctl stop xrdp
+        sudo chroot $SQUASHFS_ROOT/ systemctl mask xrdp
         
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop systemd-resolved.service
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask systemd-resolved.service
+        sudo chroot $SQUASHFS_ROOT/ systemctl stop systemd-resolved.service
+        sudo chroot $SQUASHFS_ROOT/ systemctl mask systemd-resolved.service
 
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl stop tftpd-hpa.service
-        sudo --preserve-env chroot $SQUASHFS_ROOT/ systemctl mask tftpd-hpa.service
+        sudo chroot $SQUASHFS_ROOT/ systemctl stop tftpd-hpa.service
+        sudo chroot $SQUASHFS_ROOT/ systemctl mask tftpd-hpa.service
         
         sudo rm -f $SQUASHFS_ROOT/etc/resolv.conf
   
