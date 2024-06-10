@@ -1,3 +1,4 @@
+acpi
 archivemount
 autopsy
 bat
@@ -55,6 +56,7 @@ libfvde-utils
 libpcap-dev
 libpq-dev
 libssl-dev
+lm-sensors
 lsof
 ltrace
 make
@@ -131,6 +133,7 @@ tshark
 tzdata
 udpcast
 unrar
+upower
 usbutils
 util-linux
 vbindiff
