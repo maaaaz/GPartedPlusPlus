@@ -1,4 +1,5 @@
 acpi
+aria2
 archivemount
 autopsy
 bat
