@@ -18,6 +18,7 @@ dmidecode
 dnsutils
 dos2unix
 dstat
+ewf-tools
 fd-find
 fdupes
 ffmpeg
@@ -53,6 +54,7 @@ kbd
 less
 lftp
 libbde-utils
+libewf-dev
 libfvde-utils
 libpcap-dev
 libpq-dev
