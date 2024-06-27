@@ -5,6 +5,7 @@ autopsy
 bat
 bmon
 bzip2
+chntpw
 cifs-utils
 colordiff
 coreutils
