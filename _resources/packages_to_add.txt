@@ -32,7 +32,6 @@ ftp
 geany
 geany-plugins
 git
-git
 ghex
 grep
 gzip
@@ -146,6 +145,7 @@ vim
 virtualenvwrapper
 vlan
 wget
+wget2
 whois
 wimtools
 wireguard
