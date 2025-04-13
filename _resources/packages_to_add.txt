@@ -1,4 +1,7 @@
 acpi
+apfsprogs
+apfs-dkms
+apfs-fuse
 aria2
 archivemount
 autopsy
