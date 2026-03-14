@@ -95,7 +95,7 @@ lm-sensors
 lsd
 lsof
 ltrace
-lvm
+lvm2
 magicrescue
 make
 memtester
