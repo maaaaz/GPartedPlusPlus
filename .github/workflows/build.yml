@@ -18,11 +18,15 @@ env:
   ZIP_TMP: "/tmp/zip-tmp"
   SQUASHFS_TMP: "/tmp/squashfs-tmp"
   SQUASHFS_FILESYSTEM: "/tmp/zip-tmp/live/filesystem.squashfs"
+  FS_PKGS: "/tmp/zip-tmp/live/filesystem.packages.txt"
+  SHA256SUM_TXT: "/tmp/sha256sum_iso.txt"
   
   GPARTED_BASE_ZIP_URL: "https://pilotfiber.dl.sourceforge.net/project/gparted/gparted-live-stable/1.8.0-2/gparted-live-1.8.0-2-amd64.zip"
   GPARTED_CHECKSUMS: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT"
   GPARTED_CHECKSUMS_GPG: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT.gpg"
   GPARTED_GPG_KEY: "8E94C9CD163E3FB0"
+
+  
 
 defaults:
   run:
@@ -40,6 +44,7 @@ jobs:
       run: |
         set -xe
         $APT update && $APT install squashfs-tools isolinux xorriso unzip zip
+
         
     - name: Get GParted Live zip
       run: |
@@ -129,24 +134,28 @@ jobs:
 
         chmod o+x "$GITHUB_WORKSPACE/_resources/customization.chroot" && "$GITHUB_WORKSPACE/_resources/customization.chroot"
         
-        FS_PKGS="$ZIP_TMP/live/filesystem.packages.txt"
-        echo "FS_PKGS=$FS_PKGS" >> $GITHUB_ENV
-        (sudo chroot $SQUASHFS_ROOT/ dpkg --get-selections) > $FS_PKGS
-        
-        sudo chroot $SQUASHFS_ROOT/ systemctl stop rpcbind.socket
-        sudo chroot $SQUASHFS_ROOT/ systemctl mask rpcbind.socket
-        
-        sudo chroot $SQUASHFS_ROOT/ systemctl stop rpcbind
-        sudo  chroot $SQUASHFS_ROOT/ systemctl mask rpcbind
-        
-        sudo chroot $SQUASHFS_ROOT/ systemctl stop xrdp
-        sudo chroot $SQUASHFS_ROOT/ systemctl mask xrdp
-        
-        sudo chroot $SQUASHFS_ROOT/ systemctl stop systemd-resolved.service
-        sudo chroot $SQUASHFS_ROOT/ systemctl mask systemd-resolved.service
 
-        sudo chroot $SQUASHFS_ROOT/ systemctl stop tftpd-hpa.service
-        sudo chroot $SQUASHFS_ROOT/ systemctl mask tftpd-hpa.service
+
+        ($CHROOT_PARAMS dpkg-query -W -f='${Package} ${Version} ${Installed-Size;8}\n' | sort -n | column -t) > $FS_PKGS
+
+        #FS_PKGS="$ZIP_TMP/live/filesystem.packages.txt"
+        #echo "FS_PKGS=$FS_PKGS" >> $GITHUB_ENV
+        #(sudo chroot $SQUASHFS_ROOT/ dpkg --get-selections) > $FS_PKGS
+        
+        # sudo chroot $SQUASHFS_ROOT/ systemctl stop rpcbind.socket
+        # sudo chroot $SQUASHFS_ROOT/ systemctl mask rpcbind.socket
+        
+        # sudo chroot $SQUASHFS_ROOT/ systemctl stop rpcbind
+        # sudo  chroot $SQUASHFS_ROOT/ systemctl mask rpcbind
+        
+        # sudo chroot $SQUASHFS_ROOT/ systemctl stop xrdp
+        # sudo chroot $SQUASHFS_ROOT/ systemctl mask xrdp
+        
+        # sudo chroot $SQUASHFS_ROOT/ systemctl stop systemd-resolved.service
+        # sudo chroot $SQUASHFS_ROOT/ systemctl mask systemd-resolved.service
+
+        # sudo chroot $SQUASHFS_ROOT/ systemctl stop tftpd-hpa.service
+        # sudo chroot $SQUASHFS_ROOT/ systemctl mask tftpd-hpa.service
         
         sudo rm -f $SQUASHFS_ROOT/etc/resolv.conf
         
@@ -174,31 +183,34 @@ jobs:
       run: |
         set -xe
         
-        sudo cp -f $GITHUB_WORKSPACE/_resources/Gsplash.png $ZIP_TMP/syslinux/Gsplash.png
-        sudo cp -f $GITHUB_WORKSPACE/_resources/Gsplash.png $ZIP_TMP/boot/grub/Gsplash.png
+        sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" "$ZIP_TMP/syslinux/Gsplash.png"
+        sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" "$ZIP_TMP/boot/grub/Gsplash.png"
                 
         cd $SQUASHFS_TMP
-        sudo mksquashfs $SQUASHFS_ROOT filesystem.squashfs.new -b 1024k -comp xz -Xbcj x86 -e boot
-        sudo cp filesystem.squashfs.new $ZIP_TMP/live/filesystem.squashfs
+        sudo mksquashfs "$SQUASHFS_ROOT" "filesystem.squashfs.new" -b 1024k -comp xz -Xbcj x86 -e boot
+        sudo cp "filesystem.squashfs.new" "$ZIP_TMP/live/filesystem.squashfs"
         
         sudo find $ZIP_TMP -type f -exec sha256sum {} \; 1>/tmp/sha256sum.txt
-        sudo cp -f /tmp/sha256sum.txt $ZIP_TMP/sha256sum.txt
+        sudo cp -f "/tmp/sha256sum.txt" "$ZIP_TMP/sha256sum.txt"
         
         #cd $ZIP_TMP && sudo zip -r ../gparted-live.new.zip ./*
         cd $ZIP_TMP && xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > "$ISO_OUT_PATH"
         ls -al $ISO_OUT_PATH
 
-        echo "[+] sha256sum"
-        cd $ROOT_DIR
-        SHA256SUM="$ROOT_DIR/sha256sum_iso.txt"
-        echo "SHA256SUM=$SHA256SUM" >> $GITHUB_ENV
-        sha256sum --tag $ISO_OUT_FNAME | tee $SHA256SUM
+    - name: Build custom ISO
+      run: |
+        set -xe
         
+        #SHA256SUM="$ROOT_DIR/sha256sum_iso.txt"
+        #echo "SHA256SUM=$SHA256SUM" >> $GITHUB_ENV
+        
+        cd $ROOT_DIR
+        sha256sum --tag $ISO_OUT_FNAME | tee $SHA256SUM_TXT
 
     - name: Create a new release
       uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 #v0.1.15
       with:
-        body_path: ${{ env.SHA256SUM }}
+        body_path: ${{ env.SHA256SUM_TXT }}
         name: ${{ env.ISO_OUT_FNAME }}
         tag_name: ${{ env.ISO_OUT_FNAME }}
         files: |
