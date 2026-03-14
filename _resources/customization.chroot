@@ -9,5 +9,22 @@ $CHROOT_PARAMS wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.vimrc" -
 $CHROOT_PARAMS $APT_CHROOT install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
 
 $CHROOT_PARAMS $APT_CHROOT autoremove --purge
-$CHROOT_PARAMS $APT_CHROOT clean
 $CHROOT_PARAMS $APT_CHROOT autoclean
+$CHROOT_PARAMS $APT_CHROOT clean
+
+# disable services
+echo "[+] services before bulk disable+mask"
+systemctl list-unit-files --no-pager
+systemctl list-units --type=service --state=active --no-pager
+systemctl list-units --type=service --state=running --no-pager
+
+SERVICES_TO_DISABLE="rpcbind.socket rpcbind rpcbind.service rpc-statd-notify.service xrdp systemd-resolved.service lvm2-monitor.service mdadm-shutdown.service tor.service lvm2-lvmpolld.socket nfs-client.target remote-fs.target exim4.service exim4-base.timer fstrim.timer lm-sensors.service tftpd-hpa.service"
+systemctl stop $SERVICES_TO_DISABLE
+systemctl mask $SERVICES_TO_DISABLE
+
+echo "[+] services after bulk disable+mask"
+systemctl list-unit-files --no-pager
+systemctl list-units --type=service --state=active --no-pager
+systemctl list-units --type=service --state=running --no-pager
+
+echo "[+] maaaaz: customization finished"
