@@ -11,13 +11,22 @@ on: workflow_dispatch
 #   contents: write
 
 env:
-  APT: sudo apt -y -qq -o=Dpkg::Use-Pty=0
+  APT: 'sudo apt -y -qq -o=Dpkg::Use-Pty=0'
+  APT_CONF: 'apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
+  
   ROOT_DIR: "/tmp"
+  ZIP_TMP: "/tmp/zip-tmp"
+  SQUASHFS_TMP: "/tmp/squashfs-tmp"
+  SQUASHFS_FILESYSTEM: "/tmp/zip-tmp/live/filesystem.squashfs"
   
   GPARTED_BASE_ZIP_URL: "https://downloads.sourceforge.net/project/gparted/gparted-live-stable/1.8.0-2/gparted-live-1.8.0-2-amd64.zip"
   GPARTED_CHECKSUMS: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT"
   GPARTED_CHECKSUMS_GPG: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT.gpg"
   GPARTED_GPG_KEY: "8E94C9CD163E3FB0"
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build:
@@ -30,23 +39,28 @@ jobs:
     - name: Install prerequisites
       run: |
         set -xe
-
-        $APT update && $APT install -y squashfs-tools isolinux xorriso unzip zip
-        #sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
-        #sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
+        $APT update && $APT install squashfs-tools isolinux xorriso unzip zip
         
     - name: Get GParted Live zip
       run: |
         set -xe
-        
-        # ROOT_DIR="/tmp"
-        # echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
         
         cd $ROOT_DIR
         ls -al $ROOT_DIR
         
         GPARTED_BASE_FULL_FNAME=$(basename $GPARTED_BASE_ZIP_URL)
         GPARTED_BASE_NAME=$(basename $GPARTED_BASE_FULL_FNAME .zip)
+        GPARTED_BASE_FPATH=$(realpath $GPARTED_BASE_FULL_FNAME)
+
+        echo "GPARTED_BASE_FULL_FNAME=$GPARTED_BASE_FULL_FNAME" >> $GITHUB_ENV
+        echo "GPARTED_BASE_NAME=$GPARTED_BASE_NAME" >> $GITHUB_ENV
+        echo "GPARTED_BASE_FPATH=$GPARTED_BASE_FPATH" >> $GITHUB_ENV
+
+        ISO_OUT_FNAME="$GPARTED_BASE_NAME-maaaaz-edition-$(date '+%Y%m%d').iso"
+        echo "ISO_OUT_FNAME=$ISO_OUT_FNAME" >> $GITHUB_ENV
+        
+        ISO_OUT_PATH="$ROOT_DIR/$ISO_OUT_FNAME"
+        echo "ISO_OUT_PATH=$ISO_OUT_PATH" >> $GITHUB_ENV
 
         # Preparing checksum verification
         wget -nv "$GPARTED_CHECKSUMS"
@@ -57,25 +71,8 @@ jobs:
         
         time wget -nv "$GPARTED_BASE_ZIP_URL"
         sha512sum -c --ignore-missing CHECKSUMS.TXT
-
-        GPARTED_BASE_FPATH=$(realpath $GPARTED_BASE_FULL_FNAME)
+        
         ls -al $GPARTED_BASE_FPATH
-        
-        echo "GPARTED_BASE_ZIP_URL=$GPARTED_BASE_ZIP_URL" >> $GITHUB_ENV
-        echo "GPARTED_BASE_FULL_FNAME=$GPARTED_BASE_FULL_FNAME" >> $GITHUB_ENV
-        echo "GPARTED_BASE_NAME=$GPARTED_BASE_NAME" >> $GITHUB_ENV
-        echo "GPARTED_BASE_FPATH=$GPARTED_BASE_FPATH" >> $GITHUB_ENV
-
-        ISO_OUT_FNAME="$GPARTED_BASE_NAME-maaaaz-edition-$(date '+%Y%m%d').iso"
-        echo "ISO_OUT_FNAME=$ISO_OUT_FNAME" >> $GITHUB_ENV
-        
-        ISO_OUT_PATH="$ROOT_DIR/$ISO_OUT_FNAME"
-        echo "ISO_OUT_PATH=$ISO_OUT_PATH" >> $GITHUB_ENV
-        
-        #time wget -nv https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
-        #time wget -nv https://altushost-swe.dl.sourceforge.net/project/gparted/gparted-live-stable/1.4.0-5/gparted-live-1.4.0-5-amd64.zip
-
-      shell: bash
     
     - name: Prepare custom env
       run: |
@@ -83,19 +80,10 @@ jobs:
 
         cd $ROOT_DIR
         
-        ZIP_TMP="$ROOT_DIR/zip-tmp"
-        echo "ZIP_TMP=$ZIP_TMP" >> $GITHUB_ENV
-        
-        SQUASHFS_TMP="$ROOT_DIR/squashfs-tmp"
-        echo "SQUASHFS_TMP=$SQUASHFS_TMP" >> $GITHUB_ENV
-        
         mkdir "$ZIP_TMP" "$SQUASHFS_TMP"
-        
-        unzip -q $GPARTED_BASE_FPATH -d $ZIP_TMP
-
-        cp $ZIP_TMP/live/filesystem.squashfs $SQUASHFS_TMP
-        
-        cd $SQUASHFS_TMP && sudo unsquashfs filesystem.squashfs
+        unzip -q "$GPARTED_BASE_FPATH" -d "$ZIP_TMP"
+        cp "SQUASHFS_FILESYSTEM" "$SQUASHFS_TMP"
+        cd "$SQUASHFS_TMP" && sudo unsquashfs filesystem.squashfs
 
         SQUASHFS_ROOT=$(realpath ./squashfs-root)
         echo "SQUASHFS_ROOT=$SQUASHFS_ROOT" >> $GITHUB_ENV
@@ -104,8 +92,6 @@ jobs:
         sudo mount --bind /sys $SQUASHFS_ROOT/sys/
         sudo mount --bind /dev $SQUASHFS_ROOT/dev/
         sudo mount --bind /dev/pts $SQUASHFS_ROOT/dev/pts/
-        
-      shell: bash
 
     - name: Upgrade current builtin GParted packages
       run: |
@@ -115,15 +101,17 @@ jobs:
         cd $SQUASHFS_TMP
         echo nameserver 8.8.8.8| sudo tee $SQUASHFS_ROOT/etc/resolv.conf
 
-        DEBIAN_FRONTEND=noninteractive sudo --preserve-env chroot $SQUASHFS_ROOT/ apt -y -q update
+        CHROOT_PARAMS="env DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/"
+        echo "CHROOT_PARAMS=$CHROOT_PARAMS" >> $GITHUB_ENV
+        
+        $CHROOT_PARAMS $APT update
 
         wget -nv "http://free.nchc.org.tw/debian/pool/main/l/linux/linux-libc-dev_6.5.13-1_amd64.deb" -O "$SQUASHFS_ROOT/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
-        DEBIAN_FRONTEND=noninteractive sudo  chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
+        #DEBIAN_FRONTEND=noninteractive sudo  chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
+        $CHROOT_PARAMS dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         
         DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
         #DEBIAN_FRONTEND=noninteractive sudo chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
-        
-      shell: bash
     
     - name: Customize env with additional packages
       run: |
@@ -160,8 +148,7 @@ jobs:
         sudo chroot $SQUASHFS_ROOT/ systemctl mask tftpd-hpa.service
         
         sudo rm -f $SQUASHFS_ROOT/etc/resolv.conf
-  
-      shell: bash
+        
     
     - name: Unprep the custom env
       run: |
@@ -180,8 +167,7 @@ jobs:
         echo "[+] findmnt after unmount"
         findmnt
         echo
-                
-      shell: bash
+        
     
     - name: Build custom ISO
       run: |
@@ -207,7 +193,6 @@ jobs:
         echo "SHA256SUM=$SHA256SUM" >> $GITHUB_ENV
         sha256sum --tag $ISO_OUT_FNAME | tee $SHA256SUM
         
-      shell: bash
 
     - name: Create a new release
       uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 #v0.1.15
