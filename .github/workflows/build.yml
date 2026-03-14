@@ -69,7 +69,7 @@ jobs:
         gpg --verify CHECKSUMS.TXT.gpg CHECKSUMS.TXT
         
         time wget -nv "$GPARTED_BASE_ZIP_URL"
-        sha256sum -c --ignore-missing CHECKSUMS.TXT
+        grep -i sha256sums -A 2 CHECKSUMS.TXT | sha256sum -c --ignore-missing
         
         ls -al $GPARTED_BASE_FPATH
     
