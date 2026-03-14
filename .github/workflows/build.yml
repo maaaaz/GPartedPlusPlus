@@ -134,7 +134,7 @@ jobs:
         # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoclean
  
         sudo cp "$GITHUB_WORKSPACE/_resources/customization.chroot" "SQUASHFS_ROOT/tmp/customization.chroot" 
-        $CHROOT_PARAMS chmod o+x "SQUASHFS_ROOT/tmp/customization.chroot" 
+        $CHROOT_PARAMS chmod o+x "/tmp/customization.chroot" 
         $CHROOT_PARAMS "/tmp/customization.chroot"
 
         ($CHROOT_PARAMS dpkg-query -W -f='${Package} ${Version} ${Installed-Size;8}\n' | sort -n | column -t) > $FS_PKGS
