@@ -21,7 +21,7 @@ env:
   FS_PKGS: "/tmp/zip-tmp/live/filesystem.packages.txt"
   SHA256SUM_TXT: "/tmp/sha256sum_iso.txt"
   
-  GPARTED_BASE_ZIP_URL: "https://psychz.dl.sourceforge.net/project/gparted/gparted-live-stable/1.8.0-2/gparted-live-1.8.0-2-amd64.zip"
+  GPARTED_BASE_ZIP_URL: "https://sf-west-interserver-1.dl.sourceforge.net/project/gparted/gparted-live-stable/1.8.0-2/gparted-live-1.8.0-2-amd64.zip"
   GPARTED_CHECKSUMS: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT"
   GPARTED_CHECKSUMS_GPG: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT.gpg"
   GPARTED_GPG_KEY: "8E94C9CD163E3FB0"
