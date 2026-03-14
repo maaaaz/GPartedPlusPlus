@@ -1,3 +1,4 @@
+acl
 acpi
 apfsprogs
 apfs-dkms
@@ -31,7 +32,9 @@ dosfstools
 dstat
 ewf-tools
 exiftool
+exiv2
 exfatprogs
+extundelete
 fd-find
 fdupes
 ffmpeg
@@ -51,6 +54,7 @@ git
 ghex
 gnumeric
 grep
+grokevt
 gzip
 hardinfo
 hashdeep
@@ -87,12 +91,14 @@ lsd
 lsof
 ltrace
 lvm
+magicrescue
 make
 memtester
 mobile-broadband-provider-info
 moreutils
 mtools
 mtr
+myrescue
 ncdu
 net-tools
 nethogs
@@ -109,7 +115,10 @@ openssl
 openvpn
 parallel
 pciutils
+pdfid
+pdf-parser
 pff-tools
+photorec
 picocom
 pigz
 plocate
@@ -133,12 +142,17 @@ rclone
 rdiff
 rdiff-backup
 reflex
+regripper
 remmina
 restic
+rifiuti
 ripgrep
 rsync
 rzip
+safecopy
 samdump2
+scalpel
+scrounge-ntfs
 sd
 secure-delete
 sed
@@ -150,6 +164,8 @@ sox
 squashfs-tools
 squashfs-tools-ng
 sqlite3
+sqlitebrowser
+ssdeep
 sshfs
 sshuttle
 strace
@@ -161,6 +177,7 @@ sysbench
 sysfsutils
 tar
 tcpdump
+tcpick
 tcptrace
 tcpreplay
 telnet
@@ -175,6 +192,8 @@ tshark
 tzdata
 udftools
 udpcast
+undbx
+unhide
 unrar
 upower
 usbutils
@@ -189,6 +208,7 @@ wget
 wget2
 whois
 wimtools
+winregfs
 wireguard
 wodim
 x2goclient
