@@ -2,6 +2,7 @@ acpi
 apfsprogs
 apfs-dkms
 apfs-fuse
+apg
 aria2
 archivemount
 autopsy
@@ -26,14 +27,18 @@ dkms
 dmidecode
 dnsutils
 dos2unix
+dosfstools
 dstat
 ewf-tools
+exiftool
+exfatprogs
 fd-find
 fdupes
 ffmpeg
 filezilla
 findutils
 fio
+flashrom
 foremost
 freefilesync
 fsarchiver
@@ -41,6 +46,7 @@ ftp
 fuse3
 geany
 geany-plugins
+genisoimage
 git
 ghex
 gnumeric
@@ -51,6 +57,7 @@ hashdeep
 hexyl
 hexedit
 htop
+hwinfo
 iftop
 imagemagick
 inotify-tools
@@ -79,6 +86,7 @@ lm-sensors
 lsd
 lsof
 ltrace
+lvm
 make
 memtester
 mobile-broadband-provider-info
@@ -100,6 +108,7 @@ openssh-server
 openssl
 openvpn
 parallel
+pciutils
 pff-tools
 picocom
 pigz
@@ -123,6 +132,7 @@ quota
 rclone
 rdiff
 rdiff-backup
+reflex
 remmina
 restic
 ripgrep
@@ -141,6 +151,7 @@ squashfs-tools
 squashfs-tools-ng
 sqlite3
 sshfs
+sshuttle
 strace
 stress
 stress-ng
@@ -173,13 +184,18 @@ vbindiff
 vim
 virtualenvwrapper
 vlan
+vlc
 wget
 wget2
 whois
 wimtools
 wireguard
+wodim
 x2goclient
+xfsprogs
 xmount
 xxd
 xz-utils
+yq
+zstd
 zutils
