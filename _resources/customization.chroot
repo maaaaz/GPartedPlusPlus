@@ -12,6 +12,9 @@ $CHROOT_PARAMS $APT_CHROOT autoremove --purge
 $CHROOT_PARAMS $APT_CHROOT autoclean
 $CHROOT_PARAMS $APT_CHROOT clean
 
+# setup a virtualenv
+su root -c /usr/bin/bash -c "WORKON_HOME=~/.virtualenvs VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3 && source /usr/share/virtualenvwrapper/virtualenvwrapper.sh && mkvirtualenv -p python3 venvcommon && workon venvcommon && wget -nv 'https://github.com/maaaaz/dotfiles/raw/master/python_common.txt' -O '/tmp/python_common.txt' && pip3 install -r '/tmp/python_common.txt'"
+
 # disable services
 echo "[+] services before bulk disable+mask"
 systemctl list-unit-files --no-pager
