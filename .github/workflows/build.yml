@@ -105,13 +105,15 @@ jobs:
         echo "CHROOT_PARAMS=$CHROOT_PARAMS" >> $GITHUB_ENV
         
         $CHROOT_PARAMS $APT update
+        $CHROOT_PARAMS $APT --reinstall install libc6
 
-        wget -nv "http://free.nchc.org.tw/debian/pool/main/l/linux/linux-libc-dev_6.5.13-1_amd64.deb" -O "$SQUASHFS_ROOT/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
+        #wget -nv "http://free.nchc.org.tw/debian/pool/main/l/linux/linux-libc-dev_6.5.13-1_amd64.deb" -O "$SQUASHFS_ROOT/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         #DEBIAN_FRONTEND=noninteractive sudo  chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
-        $CHROOT_PARAMS dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
+        #$CHROOT_PARAMS dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         
-        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
+        #DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
         #DEBIAN_FRONTEND=noninteractive sudo chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
+        $CHROOT_PARAMS $APT_CONF full-upgrade
     
     - name: Customize env with additional packages
       run: |
