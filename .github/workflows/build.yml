@@ -52,17 +52,16 @@ jobs:
         GPARTED_BASE_NAME=$(basename $GPARTED_BASE_FULL_FNAME .zip)
         GPARTED_BASE_FPATH=$(realpath $GPARTED_BASE_FULL_FNAME)
 
+        ISO_OUT_FNAME="$GPARTED_BASE_NAME-maaaaz-edition-$(date '+%Y%m%d').iso"
+        ISO_OUT_PATH="$ROOT_DIR/$ISO_OUT_FNAME"
+
         echo "GPARTED_BASE_FULL_FNAME=$GPARTED_BASE_FULL_FNAME" >> $GITHUB_ENV
         echo "GPARTED_BASE_NAME=$GPARTED_BASE_NAME" >> $GITHUB_ENV
         echo "GPARTED_BASE_FPATH=$GPARTED_BASE_FPATH" >> $GITHUB_ENV
-
-        ISO_OUT_FNAME="$GPARTED_BASE_NAME-maaaaz-edition-$(date '+%Y%m%d').iso"
-        echo "ISO_OUT_FNAME=$ISO_OUT_FNAME" >> $GITHUB_ENV
         
-        ISO_OUT_PATH="$ROOT_DIR/$ISO_OUT_FNAME"
+        echo "ISO_OUT_FNAME=$ISO_OUT_FNAME" >> $GITHUB_ENV
         echo "ISO_OUT_PATH=$ISO_OUT_PATH" >> $GITHUB_ENV
-
-        # Preparing checksum verification
+        
         wget -nv "$GPARTED_CHECKSUMS"
         wget -nv "$GPARTED_CHECKSUMS_GPG"
 
@@ -70,7 +69,7 @@ jobs:
         gpg --verify CHECKSUMS.TXT.gpg CHECKSUMS.TXT
         
         time wget -nv "$GPARTED_BASE_ZIP_URL"
-        sha512sum -c --ignore-missing CHECKSUMS.TXT
+        sha256sum -c --ignore-missing CHECKSUMS.TXT
         
         ls -al $GPARTED_BASE_FPATH
     
