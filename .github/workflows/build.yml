@@ -133,7 +133,7 @@ jobs:
         # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q clean
         # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoclean
  
-        sudo cp "$GITHUB_WORKSPACE/_resources/customization.chroot" "SQUASHFS_ROOT/tmp/customization.chroot" 
+        sudo cp "$GITHUB_WORKSPACE/_resources/customization.chroot" "$SQUASHFS_ROOT/tmp/customization.chroot" 
         $CHROOT_PARAMS chmod o+x "/tmp/customization.chroot" 
         $CHROOT_PARAMS "/tmp/customization.chroot"
 
@@ -158,7 +158,7 @@ jobs:
         # sudo chroot $SQUASHFS_ROOT/ systemctl stop tftpd-hpa.service
         # sudo chroot $SQUASHFS_ROOT/ systemctl mask tftpd-hpa.service
         
-        sudo rm -f $SQUASHFS_ROOT/etc/resolv.conf
+        sudo rm -f "$SQUASHFS_ROOT/etc/resolv.conf"
         
     
     - name: Unprep the custom env
