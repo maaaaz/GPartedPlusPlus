@@ -154,8 +154,8 @@ wget2
 whois
 wimtools
 wireguard
+x2goclient
 xmount
-xrdp
 xxd
 xz-utils
 zutils
