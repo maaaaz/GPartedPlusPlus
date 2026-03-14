@@ -11,8 +11,8 @@ on: workflow_dispatch
 #   contents: write
 
 env:
-  APT: 'sudo apt -y -qq -o=Dpkg::Use-Pty=0'
-  APT_CHROOT: 'apt -y -q -o=Dpkg::Use-Pty=0 -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
+  APT: sudo apt -y -qq -o=Dpkg::Use-Pty=0
+  APT_CHROOT: apt -y -q -o=Dpkg::Use-Pty=0 -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
   
   ROOT_DIR: "/tmp"
   ZIP_TMP: "/tmp/zip-tmp"
