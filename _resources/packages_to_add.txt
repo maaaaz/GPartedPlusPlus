@@ -30,6 +30,7 @@ dnsutils
 dos2unix
 dosfstools
 dstat
+efitools
 ewf-tools
 exiftool
 exiv2
@@ -41,6 +42,7 @@ ffmpeg
 filezilla
 findutils
 fio
+flac
 flashrom
 foremost
 freefilesync
@@ -57,6 +59,7 @@ grep
 grokevt
 gzip
 hardinfo
+hardinfo2
 hashdeep
 hexyl
 hexedit
@@ -69,12 +72,15 @@ ioping
 iotop
 iozone3
 iperf3
+ipmitool
 iptables
 iptraf-ng
 iputils-*
 jhead
 jq
+keyutils
 kbd
+lame
 less
 lftp
 libbde-utils
@@ -154,6 +160,7 @@ samdump2
 scalpel
 scrounge-ntfs
 sd
+sdparm
 secure-delete
 sed
 sleuthkit
@@ -204,6 +211,7 @@ vim
 virtualenvwrapper
 vlan
 vlc
+vpnc
 wget
 wget2
 whois
@@ -217,5 +225,6 @@ xmount
 xxd
 xz-utils
 yq
+zerofree
 zstd
 zutils
