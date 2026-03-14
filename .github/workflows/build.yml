@@ -122,44 +122,17 @@ jobs:
     - name: Customize env with additional packages
       run: |
         set -xe
-
-        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.pystartup" -O "/root/.pystartup"
-        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "/root/.bashrc"
-        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.vimrc" -O "/root/.vimrc"
         
-        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
-        
-        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoremove --purge
-        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q clean
-        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoclean
- 
         sudo cp "$GITHUB_WORKSPACE/_resources/customization.chroot" "$SQUASHFS_ROOT/tmp/customization.chroot" 
         $CHROOT_PARAMS chmod o+x "/tmp/customization.chroot" 
         $CHROOT_PARAMS "/tmp/customization.chroot"
-
-        ($CHROOT_PARAMS dpkg-query -W -f='${Package} ${Version} ${Installed-Size;8}\n' | sort -n | column -t) > $FS_PKGS
-
-        #FS_PKGS="$ZIP_TMP/live/filesystem.packages.txt"
-        #echo "FS_PKGS=$FS_PKGS" >> $GITHUB_ENV
-        #(sudo chroot $SQUASHFS_ROOT/ dpkg --get-selections) > $FS_PKGS
-        
-        # sudo chroot $SQUASHFS_ROOT/ systemctl stop rpcbind.socket
-        # sudo chroot $SQUASHFS_ROOT/ systemctl mask rpcbind.socket
-        
-        # sudo chroot $SQUASHFS_ROOT/ systemctl stop rpcbind
-        # sudo  chroot $SQUASHFS_ROOT/ systemctl mask rpcbind
-        
-        # sudo chroot $SQUASHFS_ROOT/ systemctl stop xrdp
-        # sudo chroot $SQUASHFS_ROOT/ systemctl mask xrdp
-        
-        # sudo chroot $SQUASHFS_ROOT/ systemctl stop systemd-resolved.service
-        # sudo chroot $SQUASHFS_ROOT/ systemctl mask systemd-resolved.service
-
-        # sudo chroot $SQUASHFS_ROOT/ systemctl stop tftpd-hpa.service
-        # sudo chroot $SQUASHFS_ROOT/ systemctl mask tftpd-hpa.service
         
         sudo rm -f "$SQUASHFS_ROOT/etc/resolv.conf"
-        
+
+    - name: List installed packages
+      run: |
+        set -xe
+        ($CHROOT_PARAMS dpkg-query -W -f='${Package} ${Version} ${Installed-Size;8}\n' | sort -n | column -t) > $FS_PKGS
     
     - name: Unprep the custom env
       run: |
