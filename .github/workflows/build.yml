@@ -117,7 +117,7 @@ jobs:
         #$CHROOT_PARAMS dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
 
         $CHROOT_PARAMS $APT_CHROOT autoremove --purge xrdp
-        $CHROOT_PARAMS $APT_CHROOT full-upgrade
+        #$CHROOT_PARAMS $APT_CHROOT full-upgrade
     
     - name: Customize env with additional packages
       run: |
@@ -133,9 +133,7 @@ jobs:
         # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q clean
         # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoclean
 
-        chmod o+x "$GITHUB_WORKSPACE/_resources/customization.chroot" && "$GITHUB_WORKSPACE/_resources/customization.chroot"
-        
-
+        sudo chmod o+x "$GITHUB_WORKSPACE/_resources/customization.chroot" && sudo "$GITHUB_WORKSPACE/_resources/customization.chroot"
 
         ($CHROOT_PARAMS dpkg-query -W -f='${Package} ${Version} ${Installed-Size;8}\n' | sort -n | column -t) > $FS_PKGS
 
