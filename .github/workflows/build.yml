@@ -115,7 +115,8 @@ jobs:
         #wget -nv "http://free.nchc.org.tw/debian/pool/main/l/linux/linux-libc-dev_6.5.13-1_amd64.deb" -O "$SQUASHFS_ROOT/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         #DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         #$CHROOT_PARAMS dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
-        
+
+        $CHROOT_PARAMS $APT_CHROOT apt autoremove --purge xrdp
         $CHROOT_PARAMS $APT_CHROOT full-upgrade
     
     - name: Customize env with additional packages
