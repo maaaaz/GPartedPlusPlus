@@ -209,8 +209,9 @@ jobs:
         sha256sum --tag $ISO_OUT_FNAME | tee $SHA256SUM_TXT
 
     - name: Create a new release
-      uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 #v0.1.15
+      uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b #v2.5.0
       with:
+        make_latest: true
         body_path: ${{ env.SHA256SUM_TXT }}
         name: ${{ env.ISO_OUT_FNAME }}
         tag_name: ${{ env.ISO_OUT_FNAME }}
