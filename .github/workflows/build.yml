@@ -111,24 +111,23 @@ jobs:
         #DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         #$CHROOT_PARAMS dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         
-        #DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
-        #DEBIAN_FRONTEND=noninteractive sudo chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
         $CHROOT_PARAMS $APT_CHROOT full-upgrade
     
     - name: Customize env with additional packages
       run: |
         set -xe
 
-        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.pystartup" -O "/root/.pystartup"
-        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "/root/.bashrc"
-        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.vimrc" -O "/root/.vimrc"
+        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.pystartup" -O "/root/.pystartup"
+        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "/root/.bashrc"
+        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.vimrc" -O "/root/.vimrc"
         
-        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
+        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
         
-        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoremove --purge
-        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q clean
-        DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoclean
+        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoremove --purge
+        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q clean
+        # DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q autoclean
 
+        chmod o+x "$GITHUB_WORKSPACE/_resources/customization.chroot" && "$GITHUB_WORKSPACE/_resources/customization.chroot"
         
         FS_PKGS="$ZIP_TMP/live/filesystem.packages.txt"
         echo "FS_PKGS=$FS_PKGS" >> $GITHUB_ENV
