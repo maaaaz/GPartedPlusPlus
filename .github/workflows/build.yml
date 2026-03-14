@@ -19,7 +19,7 @@ env:
   SQUASHFS_TMP: "/tmp/squashfs-tmp"
   SQUASHFS_FILESYSTEM: "/tmp/zip-tmp/live/filesystem.squashfs"
   
-  GPARTED_BASE_ZIP_URL: "https://downloads.sourceforge.net/project/gparted/gparted-live-stable/1.8.0-2/gparted-live-1.8.0-2-amd64.zip"
+  GPARTED_BASE_ZIP_URL: "https://pilotfiber.dl.sourceforge.net/project/gparted/gparted-live-stable/1.8.0-2/gparted-live-1.8.0-2-amd64.zip"
   GPARTED_CHECKSUMS: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT"
   GPARTED_CHECKSUMS_GPG: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT.gpg"
   GPARTED_GPG_KEY: "8E94C9CD163E3FB0"
