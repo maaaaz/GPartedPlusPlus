@@ -2,7 +2,6 @@ acl
 acpi
 apfsprogs
 apfs-dkms
-apfs-fuse
 apg
 aria2
 archivemount
@@ -121,10 +120,7 @@ openssl
 openvpn
 parallel
 pciutils
-pdfid
-pdf-parser
 pff-tools
-photorec
 picocom
 pigz
 plocate
@@ -185,7 +181,6 @@ sysfsutils
 tar
 tcpdump
 tcpick
-tcptrace
 tcpreplay
 telnet
 tftp-hpa
