@@ -35,3 +35,5 @@ systemctl list-units --type=service --state=active --no-pager
 systemctl list-units --type=service --state=running --no-pager
 
 echo "[+] maaaaz: customization finished"
+
+exit 0
