@@ -142,16 +142,17 @@ jobs:
         
         echo "[+] findmnt before unmount"
         findmnt
-        echo
-        sudo umount $SQUASHFS_ROOT/proc/
+        sleep 2
+        
+        sudo umount $SQUASHFS_ROOT/sys/firmware/efi/efivars
         sudo umount $SQUASHFS_ROOT/sys/
+        sudo umount $SQUASHFS_ROOT/proc/
         sudo umount $SQUASHFS_ROOT/dev/pts/
         sudo umount $SQUASHFS_ROOT/dev/
         
         echo "[+] findmnt after unmount"
         findmnt
         echo
-        
     
     - name: Build custom ISO
       run: |
