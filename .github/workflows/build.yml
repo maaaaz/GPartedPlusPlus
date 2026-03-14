@@ -12,7 +12,7 @@ on: workflow_dispatch
 
 env:
   APT: 'sudo apt -y -qq -o=Dpkg::Use-Pty=0'
-  APT_CONF: 'apt -y -q -o=Dpkg::Use-Pty=0 -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
+  APT_CHROOT: 'apt -y -q -o=Dpkg::Use-Pty=0 -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
   
   ROOT_DIR: "/tmp"
   ZIP_TMP: "/tmp/zip-tmp"
@@ -82,7 +82,7 @@ jobs:
         mkdir "$ZIP_TMP" "$SQUASHFS_TMP"
         unzip -q "$GPARTED_BASE_FPATH" -d "$ZIP_TMP"
         cp "$SQUASHFS_FILESYSTEM" "$SQUASHFS_TMP"
-        cd "$SQUASHFS_TMP" && sudo unsquashfs filesystem.squashfs
+        cd "$SQUASHFS_TMP" && sudo unsquashfs -n filesystem.squashfs
 
         SQUASHFS_ROOT=$(realpath ./squashfs-root)
         echo "SQUASHFS_ROOT=$SQUASHFS_ROOT" >> $GITHUB_ENV
@@ -104,16 +104,16 @@ jobs:
         CHROOT_PARAMS="env DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/"
         echo "CHROOT_PARAMS=$CHROOT_PARAMS" >> $GITHUB_ENV
         
-        $CHROOT_PARAMS $APT update
-        $CHROOT_PARAMS $APT --reinstall install libc6
+        $CHROOT_PARAMS $APT_CHROOT update
+        $CHROOT_PARAMS $APT_CHROOT --reinstall install libc6
 
         #wget -nv "http://free.nchc.org.tw/debian/pool/main/l/linux/linux-libc-dev_6.5.13-1_amd64.deb" -O "$SQUASHFS_ROOT/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
-        #DEBIAN_FRONTEND=noninteractive sudo  chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
+        #DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         #$CHROOT_PARAMS dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
         
         #DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ apt -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
         #DEBIAN_FRONTEND=noninteractive sudo chroot squashfs-root/ apt -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" full-upgrade
-        $CHROOT_PARAMS $APT_CONF full-upgrade
+        $CHROOT_PARAMS $APT_CHROOT full-upgrade
     
     - name: Customize env with additional packages
       run: |
