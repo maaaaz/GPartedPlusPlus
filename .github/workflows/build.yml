@@ -6,8 +6,18 @@ on: workflow_dispatch
     # * is a special character in YAML so you have to quote this string
     #- cron:  '10 00 * * *'
 
-permissions:
-  contents: write
+
+# permissions:
+#   contents: write
+
+env:
+  APT: sudo apt -y -qq -o=Dpkg::Use-Pty=0
+  ROOT_DIR: "/tmp"
+  
+  GPARTED_BASE_ZIP_URL: "https://downloads.sourceforge.net/project/gparted/gparted-live-stable/1.8.0-2/gparted-live-1.8.0-2-amd64.zip"
+  GPARTED_CHECKSUMS: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT"
+  GPARTED_CHECKSUMS_GPG: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT"
+  GPARTED_GPG_KEY: "8E94C9CD163E3FB0"
 
 jobs:
   build:
@@ -15,38 +25,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Install prerequisites
       run: |
         set -xe
-        
-        sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
+
+        $APT update && $APT upgrade -y && $APT install -y squashfs-tools isolinux xorriso unzip zip
+        #sudo apt -y -qq -o=Dpkg::Use-Pty=0 update ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 upgrade ; sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
         #sudo apt -y -qq -o=Dpkg::Use-Pty=0 install squashfs-tools isolinux xorriso unzip zip
         
     - name: Get GParted Live zip
       run: |
         set -xe
         
-        ROOT_DIR="/tmp"
-        echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
+        # ROOT_DIR="/tmp"
+        # echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
         
         cd $ROOT_DIR
         ls -al $ROOT_DIR
         
-        GPARTED_BASE_ZIP_URL="https://freefr.dl.sourceforge.net/project/gparted/gparted-live-stable/1.5.0-6/gparted-live-1.5.0-6-amd64.zip"
         GPARTED_BASE_FULL_FNAME=$(basename $GPARTED_BASE_ZIP_URL)
         GPARTED_BASE_NAME=$(basename $GPARTED_BASE_FULL_FNAME .zip)
 
         # Preparing checksum verification
-        wget -nv "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT"
-        wget -nv "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT.gpg"
+        wget -nv "$GPARTED_CHECKSUMS"
+        wget -nv "$GPARTED_CHECKSUMS_GPG"
 
-        gpg --keyserver hkps://keys.openpgp.org --recv-key 8E94C9CD163E3FB0
+        gpg --keyserver hkps://keys.openpgp.org --recv-key "$GPARTED_GPG_KEY"
         gpg --verify CHECKSUMS.TXT.gpg CHECKSUMS.TXT
         
         time wget -nv "$GPARTED_BASE_ZIP_URL"
-        sha256sum -c --ignore-missing CHECKSUMS.TXT
+        sha512sum -c --ignore-missing CHECKSUMS.TXT
 
         GPARTED_BASE_FPATH=$(realpath $GPARTED_BASE_FULL_FNAME)
         ls -al $GPARTED_BASE_FPATH
