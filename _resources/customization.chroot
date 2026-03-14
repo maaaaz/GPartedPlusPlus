@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo "[+] maaaaz: starting customization"
+
+$CHROOT_PARAMS wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.pystartup" -O "/root/.pystartup"
+$CHROOT_PARAMS wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.bashrc" -O "/root/.bashrc"
+$CHROOT_PARAMS wget -nv "https://github.com/maaaaz/dotfiles/raw/master/.vimrc" -O "/root/.vimrc"
+
+$CHROOT_PARAMS $APT_CHROOT install $(cat "$GITHUB_WORKSPACE/_resources/packages_to_add.txt")
+
+$CHROOT_PARAMS $APT_CHROOT autoremove --purge
+$CHROOT_PARAMS $APT_CHROOT clean
+$CHROOT_PARAMS $APT_CHROOT autoclean
