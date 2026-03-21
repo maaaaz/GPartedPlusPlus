@@ -126,13 +126,15 @@ jobs:
         $CHROOT_PARAMS $APT_CHROOT autoremove --purge xrdp
         $CHROOT_PARAMS $APT_CHROOT full-upgrade
     
-    - name: Customize env - install additional packages
+    - name: Customize env - install additional packages and configuration files
       run: |
         set -xe
         
         sudo cp "$GITHUB_WORKSPACE/_resources/customization.chroot" "$SQUASHFS_ROOT/tmp/customization.chroot" 
         $CHROOT_PARAMS chmod o+x "/tmp/customization.chroot" 
         $CHROOT_PARAMS "/tmp/customization.chroot"
+
+        sudo cp -f "$GITHUB_WORKSPACE/_resources/lxterminal.conf" "$SQUASHFS_ROOT/usr/share/lxterminal/lxterminal.conf"
         
         sudo rm -f "$SQUASHFS_ROOT/etc/resolv.conf"
 
