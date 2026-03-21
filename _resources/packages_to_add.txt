@@ -240,6 +240,7 @@ whois
 wimtools
 winregfs
 wireguard
+wireless-tools
 wodim
 x2goclient
 xfsdump
