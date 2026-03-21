@@ -119,7 +119,7 @@ jobs:
         $CHROOT_PARAMS $APT_CHROOT autoremove --purge xrdp
         $CHROOT_PARAMS $APT_CHROOT full-upgrade
     
-    - name: Customize env with additional packages
+    - name: Customize env - install additional packages
       run: |
         set -xe
         
@@ -128,6 +128,13 @@ jobs:
         $CHROOT_PARAMS "/tmp/customization.chroot"
         
         sudo rm -f "$SQUASHFS_ROOT/etc/resolv.conf"
+
+    - name: Customize env - change boot logo
+      run: |
+        set -xe
+
+        sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" "$ZIP_TMP/syslinux/Gsplash.png"
+        sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" "$ZIP_TMP/boot/grub/Gsplash.png"
 
     - name: List installed packages
       run: |
@@ -157,9 +164,6 @@ jobs:
     - name: Build custom ISO
       run: |
         set -xe
-        
-        sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" "$ZIP_TMP/syslinux/Gsplash.png"
-        sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" "$ZIP_TMP/boot/grub/Gsplash.png"
                 
         cd $SQUASHFS_TMP
         sudo mksquashfs "$SQUASHFS_ROOT" "filesystem.squashfs.new" -b 1024k -comp xz -Xbcj x86 -e boot
@@ -168,22 +172,18 @@ jobs:
         sudo find $ZIP_TMP -type f -exec sha256sum {} \; 1>/tmp/sha256sum.txt
         sudo cp -f "/tmp/sha256sum.txt" "$ZIP_TMP/sha256sum.txt"
         
-        #cd $ZIP_TMP && sudo zip -r ../gparted-live.new.zip ./*
         cd $ZIP_TMP && xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > "$ISO_OUT_PATH"
         ls -al $ISO_OUT_PATH
 
-    - name: Compute ISO hash
+    - name: Compute hash of the ISO file
       run: |
         set -xe
-        
-        #SHA256SUM="$ROOT_DIR/sha256sum_iso.txt"
-        #echo "SHA256SUM=$SHA256SUM" >> $GITHUB_ENV
         
         cd $ROOT_DIR
         sha256sum --tag $ISO_OUT_FNAME | tee $SHA256SUM_TXT
 
     - name: Create a new release
-      uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b #v2.5.0
+      uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe #v2.6.1
       with:
         make_latest: true
         body_path: ${{ env.SHA256SUM_TXT }}
