@@ -132,9 +132,16 @@ jobs:
     - name: Customize env - change boot logo
       run: |
         set -xe
-
         sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" "$ZIP_TMP/syslinux/Gsplash.png"
         sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" "$ZIP_TMP/boot/grub/Gsplash.png"
+
+    - name: Customize env - change boot menus to french unattended
+      run: |
+        set -xe
+        
+        sudo cp -f "$GITHUB_WORKSPACE/_resources/menu_entries_french/syslinux.cfg" "$ZIP_TMP/syslinux/syslinux.cfg"
+        sudo cp -f "$GITHUB_WORKSPACE/_resources/menu_entries_french/syslinux.cfg" "$ZIP_TMP/syslinux/isolinux.cfg"
+        sudo cp -f "$GITHUB_WORKSPACE/_resources/menu_entries_french/grub.cfg" "$ZIP_TMP/boot/grub/grub.cfg"
 
     - name: List installed packages
       run: |
