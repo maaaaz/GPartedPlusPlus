@@ -7,9 +7,6 @@ on: workflow_dispatch
     #- cron:  '10 00 * * *'
 
 
-# permissions:
-#   contents: write
-
 env:
   APT: sudo apt -y -qq -o=Dpkg::Use-Pty=0
   APT_CHROOT: apt -y -q -o=Dpkg::Use-Pty=0 -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold
@@ -34,9 +31,22 @@ defaults:
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - TARGET: regular
+            EDITION: maaaaz-regular-edition
+            
+          - TARGET: french
+            EDITION: maaaaz-french-unattended-edition
+
 
     runs-on: ubuntu-latest
-
+    env:
+      TARGET: ${{ matrix.TARGET }}
+      EDITION: ${{ matrix.EDITION }}
+      
     steps:
     - uses: actions/checkout@v6
     
@@ -57,7 +67,8 @@ jobs:
         GPARTED_BASE_NAME=$(basename $GPARTED_BASE_FULL_FNAME .zip)
         GPARTED_BASE_FPATH=$(realpath $GPARTED_BASE_FULL_FNAME)
 
-        ISO_OUT_FNAME="$GPARTED_BASE_NAME-maaaaz-edition-$(date '+%Y%m%d').iso"
+        #ISO_OUT_FNAME="$GPARTED_BASE_NAME-maaaaz-edition-$(date '+%Y%m%d').iso"
+        ISO_OUT_FNAME="$GPARTED_BASE_NAME-$EDITION-$(date '+%Y%m%d').iso"
         ISO_OUT_PATH="$ROOT_DIR/$ISO_OUT_FNAME"
 
         echo "GPARTED_BASE_FULL_FNAME=$GPARTED_BASE_FULL_FNAME" >> $GITHUB_ENV
@@ -112,10 +123,6 @@ jobs:
         $CHROOT_PARAMS $APT_CHROOT update
         $CHROOT_PARAMS $APT_CHROOT --reinstall install libc6
 
-        #wget -nv "http://free.nchc.org.tw/debian/pool/main/l/linux/linux-libc-dev_6.5.13-1_amd64.deb" -O "$SQUASHFS_ROOT/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
-        #DEBIAN_FRONTEND=noninteractive sudo chroot $SQUASHFS_ROOT/ dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
-        #$CHROOT_PARAMS dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
-
         $CHROOT_PARAMS $APT_CHROOT autoremove --purge xrdp
         $CHROOT_PARAMS $APT_CHROOT full-upgrade
     
@@ -129,13 +136,16 @@ jobs:
         
         sudo rm -f "$SQUASHFS_ROOT/etc/resolv.conf"
 
+
     - name: Customize env - change boot logo
       run: |
         set -xe
         sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" "$ZIP_TMP/syslinux/Gsplash.png"
         sudo cp -f "$GITHUB_WORKSPACE/_resources/Gsplash.png" "$ZIP_TMP/boot/grub/Gsplash.png"
 
+    
     - name: Customize env - change boot menus to french unattended
+      if: env.TARGET == 'french'
       run: |
         set -xe
         
