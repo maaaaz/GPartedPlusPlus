@@ -26,6 +26,7 @@ Additions
     * `libbde-utils`, `dislocker`: to process BitLocked volumes
     * `ioping`, `nvme-cli`, `fio`: to troubleshoot disks
 * A Python virtualenv with [common packages](https://github.com/maaaaz/dotfiles/blob/master/python_common.txt): `sudo -s && workon venvcommon`
+* Two editions: the `regular` one, and the `french-unattended` one (french azerty keymap already set + autostart to RAM from the grub menu)
 
 Usage
 -----
