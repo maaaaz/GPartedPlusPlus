@@ -9,14 +9,13 @@ at
 autopsy
 axel
 bat
-binutls
+binutils
 binwalk
 bmon
 bonnie++
 borgbackup
 btop
 bzip2
-ccid
 chntpw
 cifs-utils
 colordiff
