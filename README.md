@@ -12,7 +12,7 @@ Additions
   
 * Common bash aliases in the `/root/.bashrc` file
   
-* Some useful additional packages (additional packages installed list [here](https://github.com/maaaaz/GPartedPlusPlus/blob/main/_resources/packages_to_add.txt), full package list in the `filesystem.packages.txt` of each [Release](https://github.com/maaaaz/GPartedPlusPlus/releases)), mostly based on [these ones](https://github.com/maaaaz/dotfiles/blob/master/debian_ubuntu_packages.txt), also inspired by [kaisenlinux](https://kaisenlinux.org/documentation/tools.html) and [SystemRescue][https://www.system-rescue.org/):
+* Some useful additional packages (additional packages installed list [here](https://github.com/maaaaz/GPartedPlusPlus/blob/main/_resources/packages_to_add.txt), full package list in the `filesystem.packages.txt` of each [Release](https://github.com/maaaaz/GPartedPlusPlus/releases)), mostly based on [these ones](https://github.com/maaaaz/dotfiles/blob/master/debian_ubuntu_packages.txt), also inspired by [kaisenlinux](https://kaisenlinux.org/documentation/tools.html) and [SystemRescue](https://www.system-rescue.org/):
     * `pv`: to allow printing progress bars and rates during transfers etc.
     * `htop`, `bmon`, `nmon`: for system monitoring
     * `zutils`, `pigz`, `zip`, `unzip`: for processing zlib compressed data
@@ -25,6 +25,7 @@ Additions
     * `open-vm-tools`: to have a builtin compatibility with VMWare hypervisors
     * `libbde-utils`, `dislocker`: to process BitLocked volumes
     * `ioping`, `nvme-cli`, `fio`: to troubleshoot disks
+    * ...and a lot more !
 * A Python virtualenv with [common packages](https://github.com/maaaaz/dotfiles/blob/master/python_common.txt): `sudo -s && workon venvcommon`
 * Two editions: the `regular` one, and the `french-unattended` one (french azerty keymap already set + autostart to RAM from the grub menu)
 
