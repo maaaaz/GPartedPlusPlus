@@ -35,7 +35,7 @@ Usage
 
 Changelog
 ---------
-* 2026-03-21: new release
+* 2026-03-21: new releases, with the first `french-unattended` edition
 * 2023-12-23: from now, rolling frequent updated versions
 * 2023-12-22: `gparted-live-1.5.0-6-amd64-maaaaz-edition-20231222.iso`, using the now automated Github action workflow
 * 2022-10-31: `gparted-live-1.4.0-5-amd64-maaaaz-edition.iso`
