@@ -132,7 +132,7 @@ jobs:
     - name: List installed packages
       run: |
         set -xe
-        ($CHROOT_PARAMS dpkg-query -W -f='${Package} ${Version} ${Installed-Size;8}\n' | sort -n | column -t) > $FS_PKGS
+        $CHROOT_PARAMS dpkg-query -W -f='${Package} ${Version} ${Installed-Size;8}\n' | sort -n | column -t | tee $FS_PKGS
     
     - name: Unprep the custom env
       run: |
@@ -144,7 +144,7 @@ jobs:
         findmnt
         sleep 2
         
-        sudo umount $SQUASHFS_ROOT/sys/firmware/efi/efivars
+        #sudo umount $SQUASHFS_ROOT/sys/firmware/efi/efivars
         sudo umount $SQUASHFS_ROOT/sys/
         sudo umount $SQUASHFS_ROOT/proc/
         sudo umount $SQUASHFS_ROOT/dev/pts/
