@@ -115,6 +115,7 @@ magicrescue
 make
 mc
 memtester
+mesa-utils
 mobile-broadband-provider-info
 moreutils
 mtools
