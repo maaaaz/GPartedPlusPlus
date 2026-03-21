@@ -21,7 +21,7 @@ env:
   FS_PKGS: "/tmp/zip-tmp/live/filesystem.packages.txt"
   SHA256SUM_TXT: "/tmp/sha256sum_iso.txt"
   
-  GPARTED_BASE_ZIP_URL: "https://sf-west-interserver-1.dl.sourceforge.net/project/gparted/gparted-live-stable/1.8.0-2/gparted-live-1.8.0-2-amd64.zip"
+  GPARTED_BASE_ZIP_URL: "https://sf-west-interserver-1.dl.sourceforge.net/project/gparted/gparted-live-stable/1.8.1-2/gparted-live-1.8.1-2-amd64.zip"
   GPARTED_CHECKSUMS: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT"
   GPARTED_CHECKSUMS_GPG: "https://gparted.org/gparted-live/stable/CHECKSUMS.TXT.gpg"
   GPARTED_GPG_KEY: "8E94C9CD163E3FB0"
@@ -117,7 +117,7 @@ jobs:
         #$CHROOT_PARAMS dpkg -i "/tmp/linux-libc-dev_6.5.13-1_amd64.deb"
 
         $CHROOT_PARAMS $APT_CHROOT autoremove --purge xrdp
-        #$CHROOT_PARAMS $APT_CHROOT full-upgrade
+        $CHROOT_PARAMS $APT_CHROOT full-upgrade
     
     - name: Customize env with additional packages
       run: |
@@ -172,7 +172,7 @@ jobs:
         cd $ZIP_TMP && xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin -partition_offset 16 -A 'GParted live CD' -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot --efi-boot boot/grub/efi.img -isohybrid-gpt-basdat -isohybrid-apm-hfsplus ./ > "$ISO_OUT_PATH"
         ls -al $ISO_OUT_PATH
 
-    - name: Build custom ISO
+    - name: Compute ISO hash
       run: |
         set -xe
         
