@@ -110,8 +110,11 @@ lsd
 lsof
 ltrace
 lvm2
+lz4
+lzip
 magicrescue
 make
+mc
 memtester
 mobile-broadband-provider-info
 moreutils
@@ -132,7 +135,10 @@ openssh-client
 openssh-server
 openssl
 openvpn
+paperkey
 parallel
+partclone
+partimage
 pciutils
 pff-tools
 picocom
@@ -150,6 +156,7 @@ python3-pip
 python3-virtualenv
 p7zip-full
 qbittorrent-nox
+qemu-utils
 qpdf
 qpdfview
 qrencode
@@ -163,6 +170,8 @@ remmina
 restic
 rifiuti
 ripgrep
+ristretto
+rkhunter
 rsync
 rzip
 safecopy
