@@ -19,7 +19,7 @@ Additions
     * `colordiff`, `xxd`, `vbindiff`: for pretty-printing data
     * `cifs-utils`, `smbclient`: for connecting to SMB shares
     * `nmap`, `ncat`, `socat`, `proxychains`, `wireshark`, `tshark`, `vlan`: for network transfers and debugging
-    * `xrdp`: an RDP client
+    * `rdesktop`: an RDP client
     * `usbutils`: to handle USB devices
     * `parallel`: to process parallel tasks
     * `open-vm-tools`: to have a builtin compatibility with VMWare hypervisors
@@ -33,6 +33,7 @@ Usage
 
 Changelog
 ---------
+* 2026-03-21: new release
 * 2023-12-23: from now, rolling frequent updated versions
 * 2023-12-22: `gparted-live-1.5.0-6-amd64-maaaaz-edition-20231222.iso`, using the now automated Github action workflow
 * 2022-10-31: `gparted-live-1.4.0-5-amd64-maaaaz-edition.iso`
@@ -46,6 +47,8 @@ Copyright and license
 Useful resources
 ----------------
 * https://gparted.org/add-packages-in-gparted-live.php
+* https://gparted.org/gparted-live-boot-param.php
+* https://gparted.org/livecd.php
 * https://drbl.org/fine-print.php?path=./faq/2_System/81_add_prog_in_filesystem-squashfs.faq#81_add_prog_in_filesystem-squashfs.faq
 * https://sethc23.github.io/wiki/1_POSTS/2016-03-10-modifying-linux-filesystem-and-live-cd-via-chroot/
 * http://sirlagz.net/2013/06/20/how-to-customise-gparted-livecd/
