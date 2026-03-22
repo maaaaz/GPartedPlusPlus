@@ -16,6 +16,8 @@ bonnie++
 borgbackup
 btop
 bzip2
+cabextract
+casync
 chntpw
 cifs-utils
 colordiff
@@ -24,6 +26,7 @@ curl
 dc3dd
 dcfldd
 di
+dialog
 diffutils
 discount
 dislocker
@@ -43,6 +46,7 @@ expat
 extundelete
 f2fs-tools
 fatresize
+fatsort
 fd-find
 fdupes
 ffmpeg
@@ -76,6 +80,7 @@ hwinfo
 iftop
 imagemagick
 inotify-tools
+inxi
 ioping
 iotop
 iozone3
@@ -108,9 +113,12 @@ lm-sensors
 lsd
 lsof
 ltrace
+lua5.5
 lvm2
 lz4
 lzip
+lzop
+m4
 magicrescue
 make
 mc
