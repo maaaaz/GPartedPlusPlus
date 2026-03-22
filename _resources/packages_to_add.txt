@@ -1,3 +1,4 @@
+7zip
 acl
 acpi
 apfsprogs
@@ -6,6 +7,7 @@ apg
 aria2
 archivemount
 at
+atop
 autopsy
 axel
 bat
@@ -124,15 +126,18 @@ make
 mc
 memtester
 mesa-utils
+minicom
 mobile-broadband-provider-info
 moreutils
 mtools
 mtr
+multipath-tools
 myrescue
 ncdu
 net-tools
 nethogs
 nfs-common
+nilfs-tools
 nmap
 nmon
 ntfs-3g
@@ -151,8 +156,10 @@ pciutils
 pff-tools
 picocom
 pigz
+pixz
 plocate
 powertop
+procps
 proxychains
 proxychains4
 pst-utils
@@ -190,6 +197,7 @@ sd
 sdparm
 secure-delete
 sed
+sg3-utils
 sleuthkit
 smartmontools
 smbclient
@@ -247,6 +255,7 @@ which
 whois
 wimtools
 winregfs
+wipe
 wireguard
 wireless-tools
 wodim
