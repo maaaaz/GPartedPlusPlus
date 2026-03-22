@@ -25,7 +25,7 @@ systemctl list-unit-files --no-pager
 systemctl list-units --type=service --state=active --no-pager
 systemctl list-units --type=service --state=running --no-pager
 
-SERVICES_TO_DISABLE="rpcbind.socket rpcbind rpcbind.service rpc-statd-notify.service xrdp systemd-resolved.service lvm2-monitor.service mdadm-shutdown.service tor.service lvm2-lvmpolld.socket nfs-client.target remote-fs.target exim4.service exim4-base.timer fstrim.timer lm-sensors.service tftpd-hpa.service pmcd.service pmie.service pmproxy.service stunnel.target apt-daily-upgrade.timer apt-daily.timer e2scrub_all.timer  dpkg-db-backup.timer mdcheck_continue.timer mdcheck_start.timer mdmonitor-oneshot.timer nvmf-autoconnect.service nvmefc-boot-connections.service openvpn.service pmlogger.service system-bcachefsck.slice system-xfs_scrub.slice iscsid.socket dm-event.socket bcachefsck_all.timer xfs_scrub_all.timer"
+SERVICES_TO_DISABLE="rpcbind.socket rpcbind rpcbind.service rpc-statd-notify.service xrdp systemd-resolved.service lvm2-monitor.service mdadm-shutdown.service tor.service lvm2-lvmpolld.socket nfs-client.target remote-fs.target exim4.service exim4-base.timer fstrim.timer lm-sensors.service tftpd-hpa.service pmcd.service pmie.service pmproxy.service stunnel.target apt-daily-upgrade.timer apt-daily.timer e2scrub_all.timer  dpkg-db-backup.timer mdcheck_continue.timer mdcheck_start.timer mdmonitor-oneshot.timer nvmf-autoconnect.service nvmefc-boot-connections.service openvpn.service pmlogger.service system-bcachefsck.slice system-xfs_scrub.slice iscsid.socket dm-event.socket bcachefsck_all.timer xfs_scrub_all.timer atop-rotate.timer atopacct.service atop.service multipathd.service pcscd.socket"
 systemctl stop $SERVICES_TO_DISABLE
 systemctl mask $SERVICES_TO_DISABLE
 
