@@ -32,6 +32,7 @@ Additions
 Usage
 -----
 * Download the latest iso file [in the `releases` section](https://github.com/maaaaz/GPartedPlusPlus/releases)
+* Files are also mirrored [on archive.org](http://archive.org/details/gpartedplusplus)
 
 Changelog
 ---------
