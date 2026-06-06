@@ -39,6 +39,7 @@ dos2unix
 dosfstools
 dstat
 dump
+dvdbackup
 efitools
 ewf-tools
 exfatprogs
@@ -72,6 +73,8 @@ gnumeric
 grep
 grokevt
 gzip
+handbrake
+handbrake-cli
 hardinfo
 hardinfo2
 hashdeep
