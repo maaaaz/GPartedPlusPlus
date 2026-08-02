@@ -75,7 +75,6 @@ grokevt
 gzip
 handbrake
 handbrake-cli
-hardinfo
 hardinfo2
 hashdeep
 hexyl
