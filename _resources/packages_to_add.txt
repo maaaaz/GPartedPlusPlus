@@ -16,6 +16,7 @@ binwalk
 bmon
 bonnie++
 borgbackup
+bsdextrautils
 btop
 bzip2
 cabextract
